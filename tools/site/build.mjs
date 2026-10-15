@@ -18,6 +18,7 @@ const DOCS = [
   { file: "index.md", title: "Overview" },
   { file: "getting-started.md", title: "Getting started" },
   { file: "cli.md", title: "CLI reference" },
+  { file: "storage.md", title: "Storage requirements" },
   { file: "verifying.md", title: "Verifying a publication" },
   { file: "OPERATIONS.md", title: "Operations" },
   { file: "SPEC.md", title: "Specification" },

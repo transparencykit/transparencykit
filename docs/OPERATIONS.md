@@ -14,6 +14,9 @@ Use a **single writer** for the ledger unless you've confirmed your backend hono
 
 ## Buckets (Exoscale SOS)
 
+The full list of prerequisites, with commands for the MinIO client and the AWS CLI, is in
+[Storage requirements](storage.md). In short:
+
 1. Ledger bucket **with object lock**. It can only be enabled at creation time (Exoscale docs).
    Set a default retention:
    `mc retention set --default GOVERNANCE 3650d sos/<ledger>`. COMPLIANCE mode cannot be

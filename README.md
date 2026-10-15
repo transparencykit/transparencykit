@@ -58,6 +58,10 @@ mc mb sos/acme-transparency
 "public_base_url": "https://acme-transparency.sos-ch-gva-2.exo.io"
 ```
 
+Object lock can only be enabled when the bucket is created. The full list of prerequisites
+(object lock, retention, ACLs, conditional writes, API keys) is in
+[docs/storage.md](docs/storage.md).
+
 SOS has no static website hosting. Readers use direct object URLs
 (`…/latest/index.html`) or `transparencykit serve`. See [docs/OPERATIONS.md](docs/OPERATIONS.md).
 

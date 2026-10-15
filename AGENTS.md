@@ -18,6 +18,7 @@ If you change behaviour, update the spec in the same change.
 - **Never publish `private`.** Projection types in `internal/report` (`*Out`) are the only things
   rendered. Don't render `record.*` structs directly.
 - Breakdown cells go through `Bander`; DSA CSVs never do.
+- Write nothing to the ledger bucket except `records/*`, and never overwrite: object lock keeps every version (SOS caps 1000 versions/object). Storage prerequisites: `docs/storage.md`.
 - Keep `CGO_ENABLED=0` builds working (`TestStaticBinary`).
 
 ## Code map

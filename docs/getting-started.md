@@ -1,8 +1,9 @@
 # Getting started
 
 This walk-through runs entirely on your machine with local directories. It takes about five
-minutes and needs nothing but the binary. When you are ready for real storage, continue with
-[Operations](OPERATIONS.md).
+minutes and needs nothing but the binary. When you are ready for real storage, read
+[Storage requirements](storage.md) first: the ledger bucket needs object lock, which can only be
+enabled when the bucket is created.
 
 ## 1. Install
 
@@ -99,6 +100,19 @@ tkit verify --pubkey transparencykit.pub --chain file://$PWD/public
 
 Anyone with your public key can run the same check against your published URL. See
 [Verifying a publication](verifying.md).
+
+## Move to real storage
+
+Create a ledger bucket **with object lock** and a public reports bucket, then point
+`transparencykit.json` at them:
+
+```json
+"ledger": "sos://acme-transparency-ledger/?zone=ch-gva-2",
+"public": "sos://acme-transparency/?zone=ch-gva-2"
+```
+
+[Storage requirements](storage.md) lists everything the buckets and API keys need, and
+[Operations](OPERATIONS.md) covers day-to-day running.
 
 ## Try the full demo
 

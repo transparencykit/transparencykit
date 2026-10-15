@@ -5,7 +5,8 @@ open about, and publishes signed reports from it that anyone can verify.
 
 It is one static binary (`transparencykit`, or its short name `tkit`). It stores everything in
 S3-compatible object storage: Exoscale SOS, any other S3 service, or a local directory while you
-evaluate it.
+evaluate it. In production the ledger bucket must have **object lock** enabled when it is
+created; see [Storage requirements](storage.md).
 
 ## Start here
 
@@ -14,6 +15,7 @@ evaluate it.
 | Try it in five minutes on your laptop | [Getting started](getting-started.md) |
 | Look up a command or flag | [CLI reference](cli.md) |
 | Check a provider's published report | [Verifying a publication](verifying.md) |
+| Check what your S3 storage must support (object lock, …) | [Storage requirements](storage.md) |
 | Run it in production on Exoscale SOS | [Operations](OPERATIONS.md) |
 | Understand the formats and guarantees exactly | [Specification](SPEC.md) |
 | See what the test suite proves | [Testing](TESTING.md) |

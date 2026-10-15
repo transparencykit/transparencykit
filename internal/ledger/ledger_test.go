@@ -44,11 +44,9 @@ func TestAppendAndVerify(t *testing.T) {
 	if err != nil || len(es) != 6 || head.Seq != 6 || head.Hash != e.Hash {
 		t.Fatalf("verify: %d %+v %v", len(es), head, err)
 	}
-	hb, _ := l.S.Get(ctx, "head.json")
-	var h Head
-	_ = json.Unmarshal(hb, &h)
-	if h.Seq != 6 || h.Hash != e.Hash {
-		t.Fatalf("head.json = %+v", h)
+	keys, _ := l.S.List(ctx, "")
+	if len(keys) != 6 {
+		t.Fatalf("ledger bucket must hold only record objects, got %v", keys)
 	}
 }
 

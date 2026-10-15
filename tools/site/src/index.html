@@ -117,6 +117,7 @@
       <li><strong>One static binary.</strong> Written in Go with no third-party dependencies, so the supply chain is short enough to audit.</li>
       <li><strong>Your storage, your keys.</strong> State lives in Exoscale SOS or any S3-compatible bucket you control. Nothing is sent to anyone else.</li>
       <li><strong>Immutable by design.</strong> Records are append-only and object-locked. Mistakes are amended or retracted, never deleted.</li>
+      <li><strong>What you need.</strong> Two buckets on any S3-compatible storage: a private ledger bucket created with object lock, and a public one for reports. See the <a href="docs/storage.html">storage requirements</a>.</li>
       <li><strong>Private stays private.</strong> Case references and notes are hashed into the ledger but never appear in a published file.</li>
       <li><strong>Open source.</strong> Apache-2.0. Read the specification, run the tests, change what you need.</li>
       <li><strong>Not legal advice.</strong> Have counsel review your categorisations and the DSA mapping before you file.</li>

@@ -57,7 +57,7 @@ current template before filing. Median times are expressed in **hours**.
  ┌──────────────────────────────────────┐        ┌───────────────────────────────────┐
  │ transparencykit record add  ───────────────► │──PUT──►│ private bucket (object lock ON)   │
  │ transparencykit ledger verify ◄───────────── │◄──GET──│   records/000000000001.json …     │
- │ transparencykit publish ──┐                  │        │   head.json  (advisory)           │
+ │ transparencykit publish ──┐                  │        │   (record objects only)           │
  │   aggregate+band  │  sign (Ed25519)  │        └───────────────────────────────────┘
  │   render          ▼                  │        ┌───────────────────────────────────┐
  │                manifest.json+.sig ───│──PUT──►│ public bucket (public-read ACL)   │
@@ -110,12 +110,11 @@ Each ledger entry is one object at `records/<seq zero-padded to 12>.json`:
 
 ### 4.3 Append protocol
 
-1. List `records/` and find the highest `seq` *n* (the listing is authoritative; `head.json` is a cache).
+1. List `records/` and find the highest `seq` *n*.
 2. Fetch entry *n*, recompute and check its hash.
 3. Build entry *n+1* with `prev = hash(n)` and validate the body.
 4. `PUT records/<n+1>` with `If-None-Match: *`. On `412 Precondition Failed` (another writer won),
    restart from 1, up to 5 attempts.
-5. Best-effort `PUT head.json` `{"seq":n+1,"hash":…,"updated_at":…}`.
 
 **Concurrency caveat.** Exoscale does not document SOS support for conditional writes. Without it,
 two simultaneous writers can race. Mitigations: run a **single writer** (recommended), keep
@@ -123,6 +122,8 @@ bucket versioning on (object lock implies it) so an overwritten entry survives a
 and run `ledger verify` after writes. v0.2 adds `ledger verify --versions` (ListObjectVersions).
 
 ### 4.4 Immutability
+
+Bucket and API prerequisites are listed in [Storage requirements](storage.md).
 
 Create the private bucket **with object lock** (it cannot be enabled later on SOS) and a default
 retention (e.g. GOVERNANCE, 10 years). Optionally TransparencyKit sets per-object retention headers

@@ -3,7 +3,6 @@ package ledger
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -22,11 +21,12 @@ type Ledger struct {
 	Now       func() time.Time
 }
 
-// Head is the advisory head pointer.
+// Head is the verified head of the ledger. Nothing besides record objects is
+// written to the ledger bucket: with object lock, any rewritten object would
+// accumulate undeletable versions (Exoscale SOS caps them at 1000 per object).
 type Head struct {
-	Seq       int64  `json:"seq"`
-	Hash      string `json:"hash"`
-	UpdatedAt string `json:"updated_at,omitempty"`
+	Seq  int64  `json:"seq"`
+	Hash string `json:"hash"`
 }
 
 var keyRe = regexp.MustCompile(`^records/(\d{12})\.json$`)
@@ -154,8 +154,6 @@ func (l *Ledger) Append(ctx context.Context, typ string, rawBody []byte, by stri
 		if err != nil {
 			return nil, err
 		}
-		hb, _ := json.Marshal(Head{Seq: e.Seq, Hash: e.Hash, UpdatedAt: l.now().UTC().Format(time.RFC3339)})
-		_ = l.S.Put(ctx, "head.json", hb, store.PutOptions{ContentType: "application/json"})
 		return e, nil
 	}
 	return nil, fmt.Errorf("append: too many concurrent writers, giving up")

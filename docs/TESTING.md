@@ -7,7 +7,7 @@
 | Canonical JSON | `internal/canon` | Key-order independence, no HTML escaping, floats and trailing data rejected |
 | Schemas | `internal/record` | Every enum, date, country (`UK`→`GB`), DSA-order rule; templates valid; strict unknown-field rejection |
 | Hash chain | `internal/record` | Detects edited body, edited and re-hashed body, deleted first/middle entry, reorder, edited timestamp; amendment and retraction rules |
-| Ledger on stores | `internal/ledger` | Append/verify, `head.json`, invalid amendments refused, tampered head blocks append, gaps detected, **4 concurrent writers on S3 keep a valid chain**, backend without conditional writes is detected by verify |
+| Ledger on stores | `internal/ledger` | Append/verify, ledger bucket holds only record objects, invalid amendments refused, tampered head blocks append, gaps detected, **4 concurrent writers on S3 keep a valid chain**, backend without conditional writes is detected by verify |
 | S3 client | `internal/store` | **AWS SigV4 reference vectors** (GET object, ListObjects); contract suite on file and fake S3 (pagination with page size 2, key prefix, unicode keys, create-only); lock/ACL/MD5 headers are sent and signed; URL parsing |
 | Live SOS | `internal/store/sos_integration_test.go` | Contract against a real bucket; reports whether SOS honours `If-None-Match`. Opt-in via env. |
 | Keys / signatures | `internal/manifest` | PEM round-trip, 0600 key file, no overwrite, tamper and wrong-key rejection, **OpenSSL interop** (`openssl pkeyutl -verify`) |
