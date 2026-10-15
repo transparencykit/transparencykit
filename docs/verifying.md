@@ -50,11 +50,11 @@ public key is in the repository:
 
 ```sh
 curl -sO https://raw.githubusercontent.com/transparencykit/transparencykit/main/examples/so-sovereign-cloud/transparencykit.pub
-tkit verify --pubkey transparencykit.pub --chain https://transparencykit.github.io/transparencykit/example
+tkit verify --pubkey transparencykit.pub --chain https://transparencykit.dev/example
 ```
 
-Then [open the report](https://transparencykit.github.io/transparencykit/example/latest/index.html)
-and its [Data Act page](https://transparencykit.github.io/transparencykit/example/latest/data-act-art28.html).
+Then [open the report](https://transparencykit.dev/example/latest/index.html)
+and its [Data Act page](https://transparencykit.dev/example/latest/data-act-art28.html).
 
 ## What a pass proves
 

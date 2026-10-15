@@ -22,7 +22,7 @@ into something customers, auditors and regulators can check:
   past report is detectable.
 - **Verify** anything, anytime: `transparencykit verify --pubkey transparencykit.pub https://…`.
 
-Website and documentation: **https://transparencykit.github.io/transparencykit/**
+Website and documentation: **https://transparencykit.dev/**
 
 > Status: v0.1 (draft). The spec is in [docs/SPEC.md](docs/SPEC.md). Not legal advice. Have
 > counsel review categorisations and map DSA CSVs to the official template before filing.
@@ -42,7 +42,7 @@ tkit serve                                  # http://localhost:8080
 
 `tools/demo.sh --serve` builds the **So Sovereign Cloud SA** example (a fictional provider, 117
 records) and serves it. The same example is published, signed, at
-<https://transparencykit.github.io/transparencykit/example/>; see
+<https://transparencykit.dev/example/>; see
 [examples/so-sovereign-cloud](examples/so-sovereign-cloud/).
 
 ## On Exoscale SOS

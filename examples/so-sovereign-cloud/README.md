@@ -2,7 +2,7 @@
 
 A fictional Swiss cloud provider with three zones, a handful of subprocessors and a year of
 government requests and abuse notices (117 records). The website publishes its 2026 report at
-<https://transparencykit.github.io/transparencykit/example/>, rebuilt and re-signed on every
+<https://transparencykit.dev/example/>, rebuilt and re-signed on every
 deployment.
 
 | Zone | Location | Data-centre operator |
@@ -17,7 +17,7 @@ All names, domains (`so-sovereign.example`) and figures are invented.
 
 ```sh
 tkit verify --pubkey examples/so-sovereign-cloud/transparencykit.pub --chain \
-  https://transparencykit.github.io/transparencykit/example
+  https://transparencykit.dev/example
 ```
 
 ## Rebuild it locally

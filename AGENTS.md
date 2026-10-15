@@ -55,7 +55,7 @@ cd tools/site && npm ci && node build.mjs   # website into _site/ (deployed by .
 ```
 
 ## Open items / next steps
-- Repository: github.com/transparencykit/transparencykit (GitHub org `transparencykit`); website transparencykit.dev.
+- Repository: github.com/transparencykit/transparencykit (GitHub org `transparencykit`). Website https://transparencykit.dev (GitHub Pages custom domain; DNS at Gandi: apex A/AAAA to GitHub Pages, www CNAME transparencykit.github.io; domain verified for the org).
 - Validate DSA CSV headers byte-for-byte against the official Annex I template (SPEC §2 caveat).
 - Confirm SOS `If-None-Match` behaviour with `TestSOSIntegration`; document the result in the SPEC.
 - v0.2: `ledger verify --versions`, authenticated key rotation, `canary.json`, XLSX export.

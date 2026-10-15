@@ -117,7 +117,7 @@ Create a ledger bucket **with object lock** and a public reports bucket, then po
 ## Try the full demo
 
 The repository ships **So Sovereign Cloud SA**, a fictional provider with 117 records
-([published example](https://transparencykit.github.io/transparencykit/example/latest/index.html)):
+([published example](https://transparencykit.dev/example/latest/index.html)):
 
 ```sh
 git clone https://github.com/transparencykit/transparencykit

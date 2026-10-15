@@ -10,7 +10,7 @@
   "home_jurisdictions": ["CH", "EU", "EEA"],
   "ledger": "file://./ledger",
   "public": "file://./public",
-  "public_base_url": "https://transparencykit.github.io/transparencykit/example",
+  "public_base_url": "https://transparencykit.dev/example",
   "signing_key": "transparencykit.key",
   "min_count": 3,
   "dsa_qualitative": "dsa-qualitative.json"

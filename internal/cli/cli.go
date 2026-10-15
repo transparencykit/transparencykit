@@ -88,7 +88,7 @@ const usageFooter = `
 Record types: gov_request, abuse_notice, subprocessor_change, infrastructure, measures, retraction
 Global flag:  --config path (default ./transparencykit.json or $TRANSPARENCYKIT_CONFIG)
 Credentials:  EXOSCALE_API_KEY / EXOSCALE_API_SECRET (or AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
-Docs:         https://transparencykit.github.io/transparencykit/
+Docs:         https://transparencykit.dev/
 `
 
 func usageFor(prog string) string {
