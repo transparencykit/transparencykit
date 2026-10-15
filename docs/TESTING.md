@@ -15,7 +15,7 @@
 | Privacy | `internal/report`, e2e | `private` content never appears in any published file |
 | DSA CSVs | `internal/report` | Column counts match published hosting-provider filings (tab 3: 20, tab 4: 28), exact values, never banded |
 | Publication chain | `internal/verify` | v1→v2 link, `latest/` verifiable, older-period publication extends the chain without moving `latest/`, byte tamper, **re-signed old manifest caught by link hash**, tampered chain head blocks publish, immutable versions, dry run writes nothing, HTTP verification |
-| CLI end-to-end | `cmd/vitrine/e2e_test.go` | Real binary: init → add/amend → list/show → verify → publish → verify (file, S3, HTTP), exit codes 0/1/2, `--expect-head`, tamper paths, **static linking** |
+| CLI end-to-end | `cmd/transparencykit/e2e_test.go` | Real binary: init → add/amend → list/show → verify → publish → verify (file, S3, HTTP), exit codes 0/1/2, `--expect-head`, tamper paths, **static linking** |
 
 ## Manual acceptance (before a release)
 

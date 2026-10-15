@@ -1,6 +1,6 @@
 dist/
 demo/
 *.key
-vitrine.json
+transparencykit.json
 ledger/
 public/

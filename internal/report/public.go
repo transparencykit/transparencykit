@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/exoscale/vitrine/internal/config"
+	"github.com/transparencykit/transparencykit/internal/config"
 )
 
 // Schema ids.
 const (
-	ReportSchema = "vitrine/report/v1"
-	Art28Schema  = "vitrine/data-act-art28/v1"
-	SubSchema    = "vitrine/subprocessors/v1"
+	ReportSchema = "transparencykit/report/v1"
+	Art28Schema  = "transparencykit/data-act-art28/v1"
+	SubSchema    = "transparencykit/subprocessors/v1"
 )
 
 // Cell is a published count: an int (exact) or a string band like "1-2".

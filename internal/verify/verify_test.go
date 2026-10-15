@@ -11,14 +11,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/cli"
-	"github.com/exoscale/vitrine/internal/config"
-	"github.com/exoscale/vitrine/internal/ledger"
-	"github.com/exoscale/vitrine/internal/manifest"
-	"github.com/exoscale/vitrine/internal/record"
-	"github.com/exoscale/vitrine/internal/report"
-	"github.com/exoscale/vitrine/internal/store"
-	"github.com/exoscale/vitrine/internal/verify"
+	"github.com/transparencykit/transparencykit/internal/cli"
+	"github.com/transparencykit/transparencykit/internal/config"
+	"github.com/transparencykit/transparencykit/internal/ledger"
+	"github.com/transparencykit/transparencykit/internal/manifest"
+	"github.com/transparencykit/transparencykit/internal/record"
+	"github.com/transparencykit/transparencykit/internal/report"
+	"github.com/transparencykit/transparencykit/internal/store"
+	"github.com/transparencykit/transparencykit/internal/verify"
 )
 
 type env struct {
@@ -33,7 +33,7 @@ type env struct {
 func setup(t *testing.T) *env {
 	t.Helper()
 	d := t.TempDir()
-	cp := filepath.Join(d, "vitrine.json")
+	cp := filepath.Join(d, "transparencykit.json")
 	os.WriteFile(cp, []byte(config.Example), 0o644)
 	cfg, err := config.Load(cp)
 	if err != nil {
@@ -41,11 +41,11 @@ func setup(t *testing.T) *env {
 	}
 	ls, _ := store.Open(cfg.Resolve(cfg.Ledger))
 	ps, _ := store.Open(cfg.Resolve(cfg.Public))
-	pk, err := manifest.GenerateKey(filepath.Join(d, "vitrine.key"), filepath.Join(d, "vitrine.pub"))
+	pk, err := manifest.GenerateKey(filepath.Join(d, "transparencykit.key"), filepath.Join(d, "transparencykit.pub"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	key, _ := manifest.LoadPrivate(filepath.Join(d, "vitrine.key"))
+	key, _ := manifest.LoadPrivate(filepath.Join(d, "transparencykit.key"))
 	e := &env{cfg: cfg, led: &ledger.Ledger{S: ls}, pub: ps, key: key, pk: pk, root: filepath.Join(d, "public")}
 	for _, typ := range []string{record.TypeInfra, record.TypeMeasures, record.TypeGovRequest, record.TypeAbuseNotice, record.TypeSubprocessor} {
 		tp, _ := record.Template(typ)

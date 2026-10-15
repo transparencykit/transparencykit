@@ -150,7 +150,7 @@ const reportTpl = `<!doctype html><html lang="en"><head><meta charset="utf-8"><m
 <p class="note">See also the <a href="data-act-art28.html">EU Data Act Art. 28 disclosure</a>.</p>
 {{template "zones" .Infrastructure}}
 
-<footer>Every number on this page is derived from a hash-chained, append-only ledger. All files of this publication are listed with their SHA-256 in <a href="manifest.json">manifest.json</a>, signed with Ed25519 (<a href="manifest.sig">manifest.sig</a>, key <code>{{keyid}}</code>). Verify with <code>vitrine verify</code>. Contact: {{.Provider.Contact}}.</footer>
+<footer>Every number on this page is derived from a hash-chained, append-only ledger. All files of this publication are listed with their SHA-256 in <a href="manifest.json">manifest.json</a>, signed with Ed25519 (<a href="manifest.sig">manifest.sig</a>, key <code>{{keyid}}</code>). Verify with <code>transparencykit verify</code>. Contact: {{.Provider.Contact}}.</footer>
 </main></body></html>
 {{define "zones"}}{{if .}}<div class="wrap"><table><tr><th>Zone</th><th>Location</th><th>Legal entity</th><th>Data-centre operator</th><th>Services</th></tr>
 {{range .}}<tr><td><b>{{.Zone}}</b></td><td>{{.City}}{{if .City}}, {{end}}{{.Country}}</td><td>{{.LegalEntity}} ({{.LegalEntityCountry}})</td><td>{{.Operator}}{{if .OperatorCountry}} ({{.OperatorCountry}}){{end}}</td><td>{{join .Services}}</td></tr>{{end}}
@@ -179,10 +179,10 @@ const art28Tpl = `<!doctype html><html lang="en"><head><meta charset="utf-8"><me
 const rootTpl = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{.Provider}} · Transparency</title><style>{{css}}</style></head><body><main>
 <header><div class="meta">Transparency</div><h1>{{.Provider}}</h1>
-<div class="meta">Latest: <a href="latest/index.html">report</a> · <a href="latest/data-act-art28.html">Data Act Art. 28</a> · <a href="latest/subprocessors.atom">subprocessor feed</a> · <a href="vitrine.pub">public key</a></div></header>
+<div class="meta">Latest: <a href="latest/index.html">report</a> · <a href="latest/data-act-art28.html">Data Act Art. 28</a> · <a href="latest/subprocessors.atom">subprocessor feed</a> · <a href="transparencykit.pub">public key</a></div></header>
 <table><tr><th>Period</th><th>Version</th><th>Report</th><th>Manifest</th></tr>
 {{range .Items}}<tr><td>{{.Label}}</td><td>v{{.Version}}</td><td><a href="{{.Path}}index.html">HTML</a> · <a href="{{.Path}}report.json">JSON</a></td><td><a href="{{.Path}}manifest.json">manifest</a></td></tr>{{end}}
-</table><footer>Published with vitrine. Verify: <code>vitrine verify --pubkey vitrine.pub &lt;this URL&gt;</code></footer></main></body></html>`
+</table><footer>Published with transparencykit. Verify: <code>transparencykit verify --pubkey transparencykit.pub &lt;this URL&gt;</code></footer></main></body></html>`
 
 func tpl(name, src, keyID string) *template.Template {
 	f := template.FuncMap{"css": func() template.CSS { return template.CSS(css) },

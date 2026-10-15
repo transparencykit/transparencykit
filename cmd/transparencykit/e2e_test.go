@@ -14,23 +14,23 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/exoscale/vitrine/internal/cli"
-	"github.com/exoscale/vitrine/internal/s3fake"
-	"github.com/exoscale/vitrine/internal/store"
+	"github.com/transparencykit/transparencykit/internal/cli"
+	"github.com/transparencykit/transparencykit/internal/s3fake"
+	"github.com/transparencykit/transparencykit/internal/store"
 )
 
 var bin string
 
 func TestMain(m *testing.M) {
-	d, err := os.MkdirTemp("", "vitrine-e2e")
+	d, err := os.MkdirTemp("", "transparencykit-e2e")
 	if err != nil {
 		panic(err)
 	}
-	bin = filepath.Join(d, "vitrine")
+	bin = filepath.Join(d, "transparencykit")
 	if runtime.GOOS == "windows" {
 		bin += ".exe"
 	}
-	cmd := exec.Command("go", "build", "-trimpath", "-ldflags", "-X github.com/exoscale/vitrine/internal/cli.Version=e2e", "-o", bin, ".")
+	cmd := exec.Command("go", "build", "-trimpath", "-ldflags", "-X github.com/transparencykit/transparencykit/internal/cli.Version=e2e", "-o", bin, ".")
 	cmd.Env = append(os.Environ(), "CGO_ENABLED=0")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		panic(string(out))
@@ -68,7 +68,7 @@ func (r runner) ok(stdin string, args ...string) string {
 	r.t.Helper()
 	o, e, c := r.run(stdin, args...)
 	if c != 0 {
-		r.t.Fatalf("vitrine %v: exit %d\nstdout: %s\nstderr: %s", args, c, o, e)
+		r.t.Fatalf("transparencykit %v: exit %d\nstdout: %s\nstderr: %s", args, c, o, e)
 	}
 	return o
 }
@@ -129,7 +129,7 @@ func TestE2ELocal(t *testing.T) {
 		t.Fatalf("publish: %s", pub)
 	}
 	pubDir := filepath.Join(r.dir, "public")
-	ver := r.ok("", "verify", "--pubkey", "vitrine.pub", "file://"+pubDir, "--chain")
+	ver := r.ok("", "verify", "--pubkey", "transparencykit.pub", "file://"+pubDir, "--chain")
 	if !strings.Contains(ver, "verified 1 publication") {
 		t.Fatalf("verify: %s", ver)
 	}
@@ -170,7 +170,7 @@ func TestE2ELocal(t *testing.T) {
 	idx := filepath.Join(pubDir, "reports/2026/v1/index.html")
 	b, _ := os.ReadFile(idx)
 	os.WriteFile(idx, append(b, '\n'), 0o644)
-	if o, e, c := r.run("", "verify", "--pubkey", "vitrine.pub", "file://"+pubDir, "reports/2026/v1"); c != 1 || !strings.Contains(e, "VERIFICATION FAILED") {
+	if o, e, c := r.run("", "verify", "--pubkey", "transparencykit.pub", "file://"+pubDir, "reports/2026/v1"); c != 1 || !strings.Contains(e, "VERIFICATION FAILED") {
 		t.Fatalf("tamper: exit %d\n%s\n%s", c, o, e)
 	}
 	os.WriteFile(idx, b, 0o644)
@@ -195,14 +195,14 @@ func TestE2ES3(t *testing.T) {
 	r := runner{t: t, dir: dir, env: []string{"EXOSCALE_API_KEY=EXOtestkey", "EXOSCALE_API_SECRET=testsecret"}}
 	r.ok("", "init")
 	// sos:// with an endpoint override exercises the SOS URL path against the fake.
-	cfg, _ := os.ReadFile(filepath.Join(dir, "vitrine.json"))
-	cfg = bytes.Replace(cfg, []byte(`"file://./ledger"`), []byte(`"sos://acme-ledger/vitrine?zone=ch-gva-2&endpoint=`+srv.URL+`"`), 1)
+	cfg, _ := os.ReadFile(filepath.Join(dir, "transparencykit.json"))
+	cfg = bytes.Replace(cfg, []byte(`"file://./ledger"`), []byte(`"sos://acme-ledger/transparencykit?zone=ch-gva-2&endpoint=`+srv.URL+`"`), 1)
 	cfg = bytes.Replace(cfg, []byte(`"file://./public"`), []byte(`"s3://acme-transparency/?endpoint=`+srv.URL+`&region=ch-gva-2"`), 1)
 	cfg = bytes.Replace(cfg, []byte(`"min_count": 3`), []byte(`"min_count": 3, "ledger_retention": {"mode": "GOVERNANCE", "days": 3650}`), 1)
-	os.WriteFile(filepath.Join(dir, "vitrine.json"), cfg, 0o644)
+	os.WriteFile(filepath.Join(dir, "transparencykit.json"), cfg, 0o644)
 
 	addFixture(t, r)
-	if _, h, ok := srv.Object("acme-ledger", "vitrine/records/000000000001.json"); !ok || h.Get("X-Amz-Object-Lock-Mode") != "GOVERNANCE" {
+	if _, h, ok := srv.Object("acme-ledger", "transparencykit/records/000000000001.json"); !ok || h.Get("X-Amz-Object-Lock-Mode") != "GOVERNANCE" {
 		t.Fatal("ledger object missing or without retention headers")
 	}
 	r.ok("", "ledger", "verify")
@@ -212,7 +212,7 @@ func TestE2ES3(t *testing.T) {
 		t.Fatal("public object missing or not public-read")
 	}
 	storeURL := "s3://acme-transparency/?endpoint=" + srv.URL + "&region=ch-gva-2"
-	o := r.ok("", "verify", "--pubkey", "vitrine.pub", "--chain", storeURL)
+	o := r.ok("", "verify", "--pubkey", "transparencykit.pub", "--chain", storeURL)
 	if !strings.Contains(o, "verified 2 publication") {
 		t.Fatalf("verify s3: %s", o)
 	}
@@ -223,7 +223,7 @@ func TestE2ES3(t *testing.T) {
 	}
 	web := httptest.NewServer(cli.Handler(ps))
 	defer web.Close()
-	o = r.ok("", "verify", "--pubkey", "vitrine.pub", "--chain", web.URL)
+	o = r.ok("", "verify", "--pubkey", "transparencykit.pub", "--chain", web.URL)
 	if !strings.Contains(o, "verified 2 publication") {
 		t.Fatalf("verify http: %s", o)
 	}
@@ -235,7 +235,7 @@ func TestE2ES3(t *testing.T) {
 	// Tamper via the S3 backend.
 	b, _, _ := srv.Object("acme-transparency", "reports/2026/v1/data-act-art28.json")
 	srv.SetObject("acme-transparency", "reports/2026/v1/data-act-art28.json", bytes.Replace(b, []byte("CH"), []byte("US"), 1))
-	if _, _, c := r.run("", "verify", "--pubkey", "vitrine.pub", "--chain", web.URL); c != 1 {
+	if _, _, c := r.run("", "verify", "--pubkey", "transparencykit.pub", "--chain", web.URL); c != 1 {
 		t.Fatalf("tamper over http: exit %d", c)
 	}
 }

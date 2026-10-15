@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/canon"
-	"github.com/exoscale/vitrine/internal/manifest"
-	"github.com/exoscale/vitrine/internal/store"
+	"github.com/transparencykit/transparencykit/internal/canon"
+	"github.com/transparencykit/transparencykit/internal/manifest"
+	"github.com/transparencykit/transparencykit/internal/store"
 )
 
 // Fetcher retrieves published files by relative path.
@@ -23,7 +23,7 @@ type Fetcher interface {
 	Fetch(ctx context.Context, p string) ([]byte, error)
 }
 
-// HTTP fetches from a base URL (e.g. direct SOS object URLs or `vitrine serve`).
+// HTTP fetches from a base URL (e.g. direct SOS object URLs or `transparencykit serve`).
 type HTTP struct {
 	Base   string
 	Client *http.Client

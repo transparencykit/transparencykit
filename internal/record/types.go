@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/geo"
+	"github.com/transparencykit/transparencykit/internal/geo"
 )
 
 // Record type names.

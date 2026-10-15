@@ -24,7 +24,7 @@ jobs:
         run: tools/release.sh ci
   sos:
     # Live test against Exoscale SOS; runs only when secrets are configured.
-    if: ${{ vars.VITRINE_SOS_TEST_BUCKET != '' }}
+    if: ${{ vars.TRANSPARENCYKIT_SOS_TEST_BUCKET != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
           go-version: "1.24"
       - run: go test -count=1 -run SOS -v ./internal/store
         env:
-          VITRINE_SOS_TEST_BUCKET: ${{ vars.VITRINE_SOS_TEST_BUCKET }}
-          VITRINE_SOS_TEST_ZONE: ${{ vars.VITRINE_SOS_TEST_ZONE }}
+          TRANSPARENCYKIT_SOS_TEST_BUCKET: ${{ vars.TRANSPARENCYKIT_SOS_TEST_BUCKET }}
+          TRANSPARENCYKIT_SOS_TEST_ZONE: ${{ vars.TRANSPARENCYKIT_SOS_TEST_ZONE }}
           EXOSCALE_API_KEY: ${{ secrets.EXOSCALE_API_KEY }}
           EXOSCALE_API_SECRET: ${{ secrets.EXOSCALE_API_SECRET }}

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/store"
+	"github.com/transparencykit/transparencykit/internal/store"
 )
 
 func app() (*App, *bytes.Buffer, *bytes.Buffer) {
@@ -24,11 +24,11 @@ func TestUsageAndErrors(t *testing.T) {
 		t.Fatal("no args")
 	}
 	a, o, _ := app()
-	if a.Run([]string{"help"}) != ExitOK || !strings.Contains(o.String(), "vitrine record add") {
+	if a.Run([]string{"help"}) != ExitOK || !strings.Contains(o.String(), "transparencykit record add") {
 		t.Fatal("help")
 	}
 	a, _, e = app()
-	if a.Run([]string{"--config", "/nonexistent.json", "ledger", "verify"}) != ExitUsage || !strings.Contains(e.String(), "vitrine init") {
+	if a.Run([]string{"--config", "/nonexistent.json", "ledger", "verify"}) != ExitUsage || !strings.Contains(e.String(), "transparencykit init") {
 		t.Fatalf("missing config: %s", e)
 	}
 	a, _, e = app()

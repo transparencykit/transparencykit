@@ -18,7 +18,7 @@ import (
 )
 
 // Schema is the manifest schema id.
-const Schema = "vitrine/manifest/v1"
+const Schema = "transparencykit/manifest/v1"
 
 // File is one covered file.
 type File struct {

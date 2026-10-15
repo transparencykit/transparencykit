@@ -101,7 +101,7 @@ func (s *S3) do(ctx context.Context, method string, u *url.URL, body []byte, hdr
 		}
 	}
 	req.ContentLength = int64(len(body))
-	req.Header.Set("User-Agent", "vitrine")
+	req.Header.Set("User-Agent", "transparencykit")
 	s.signer.Sign(req, hexSum(body), s.cfg.Now())
 	return s.cfg.Client.Do(req)
 }

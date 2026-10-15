@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/canon"
+	"github.com/transparencykit/transparencykit/internal/canon"
 )
 
 var t0 = time.Date(2026, 10, 14, 10, 0, 0, 0, time.UTC)

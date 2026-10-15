@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/canon"
+	"github.com/transparencykit/transparencykit/internal/canon"
 )
 
 // Entry is a ledger envelope.

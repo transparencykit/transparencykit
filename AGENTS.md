@@ -1,4 +1,4 @@
-# AGENTS.md — working on vitrine
+# AGENTS.md — working on transparencykit
 
 Context for humans and coding agents resuming work on this repository.
 
@@ -21,7 +21,7 @@ If you change behaviour, update the spec in the same change.
 ## Code map
 | Path | Role |
 |---|---|
-| `cmd/vitrine` | `main` + end-to-end tests (build the real binary) |
+| `cmd/transparencykit` | `main` + end-to-end tests (build the real binary) |
 | `internal/cli` | Commands, flag parsing, read-only HTTP `Handler` |
 | `internal/canon` | Canonical JSON + SHA-256 helpers |
 | `internal/record` | Envelope, body schemas and validation, chain verification, amendment/retraction resolution |
@@ -31,7 +31,7 @@ If you change behaviour, update the spec in the same change.
 | `internal/report` | Period parsing, exact aggregation, banded public model, HTML/JSON/Atom/DSA CSV rendering, `Publish` |
 | `internal/manifest` | Manifest schema, Ed25519 keys (PKCS#8/PKIX PEM), sign/verify |
 | `internal/verify` | Public verification over HTTP or a store, manifest chain walking |
-| `internal/config`, `internal/geo` | `vitrine.json`; EU/EEA sets and ISO-country checks |
+| `internal/config`, `internal/geo` | `transparencykit.json`; EU/EEA sets and ISO-country checks |
 | `tools/` | Reusable scripts (`demo.sh`, `release.sh`) |
 | `examples/records/demo.json` | Fictional 117-record dataset used by the demo |
 
@@ -43,7 +43,7 @@ tools/release.sh v0.1.0             # static binaries for linux/darwin amd64/arm
 ```
 
 ## Open items / next steps
-- Module path `github.com/exoscale/vitrine` is a placeholder; change it if the repository lives elsewhere.
+- Repository: github.com/transparencykit/transparencykit (GitHub org `transparencykit`); website transparencykit.dev.
 - Validate DSA CSV headers byte-for-byte against the official Annex I template (SPEC §2 caveat).
 - Confirm SOS `If-None-Match` behaviour with `TestSOSIntegration`; document the result in the SPEC.
 - v0.2: `ledger verify --versions`, signed key rotation, `canary.json`, XLSX export.

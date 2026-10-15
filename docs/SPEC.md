@@ -1,8 +1,8 @@
-# Vitrine — Specification v0.1
+# TransparencyKit — Specification v0.1
 
 Status: draft · Date: 2026-10-14 · Licence: Apache-2.0
 
-Vitrine is a single static binary that lets a cloud, SaaS, PaaS or IaaS provider keep a
+TransparencyKit is a single static binary that lets a cloud, SaaS, PaaS or IaaS provider keep a
 **tamper-evident ledger** of transparency-relevant events in S3-compatible object storage
 and **publish signed, verifiable transparency outputs** from it.
 
@@ -27,7 +27,7 @@ and **publish signed, verifiable transparency outputs** from it.
 ### Non-goals (v0.1)
 
 - Submitting statements of reasons to the DSA Transparency Database. Only online platforms owe these; hosting services do not.
-- Content-moderation workflow, case management or ticketing. Vitrine records outcomes; it does not run the process.
+- Content-moderation workflow, case management or ticketing. TransparencyKit records outcomes; it does not run the process.
 - Legal advice. Templates and categorisations must be reviewed by counsel before filing.
 - Witness co-signing / public transparency-log anchoring (planned v0.3, see §11).
 
@@ -35,7 +35,7 @@ and **publish signed, verifiable transparency outputs** from it.
 
 ## 2. Regulatory mapping
 
-| Output | Legal hook | What Vitrine produces |
+| Output | Legal hook | What TransparencyKit produces |
 |---|---|---|
 | Data Act page | Reg. (EU) 2023/2854 Art. 28(1)(a): jurisdiction of the ICT infrastructure per service; Art. 28(1)(b): general description of technical, organisational and contractual measures against conflicting international governmental access. Art. 28(2): page must be referenced in contracts. | `data-act-art28.html` / `.json`: per-zone jurisdiction table from `infrastructure` records, measures from the latest `measures` record. Stable URL `latest/data-act-art28.html`. |
 | Customer notice evidence | Data Act Art. 32(5): inform the customer of a third-country authority request before complying (law-enforcement exception). | `customer_notification` field on every `gov_request`; report shows notification stats for third-country requests. |
@@ -55,20 +55,20 @@ current template before filing. Median times are expressed in **hours**.
 ```
             operator workstation / CI                     object storage (SOS)
  ┌──────────────────────────────────────┐        ┌───────────────────────────────────┐
- │ vitrine record add  ───────────────► │──PUT──►│ private bucket (object lock ON)   │
- │ vitrine ledger verify ◄───────────── │◄──GET──│   records/000000000001.json …     │
- │ vitrine publish ──┐                  │        │   head.json  (advisory)           │
+ │ transparencykit record add  ───────────────► │──PUT──►│ private bucket (object lock ON)   │
+ │ transparencykit ledger verify ◄───────────── │◄──GET──│   records/000000000001.json …     │
+ │ transparencykit publish ──┐                  │        │   head.json  (advisory)           │
  │   aggregate+band  │  sign (Ed25519)  │        └───────────────────────────────────┘
  │   render          ▼                  │        ┌───────────────────────────────────┐
  │                manifest.json+.sig ───│──PUT──►│ public bucket (public-read ACL)   │
  └──────────────────────────────────────┘        │   reports/2026/v1/…  latest/…     │
                                                  │   latest.json  index.html  .pub   │
- anyone: vitrine verify https://…  ◄────GET──────│                                   │
- browser: direct object URLs or `vitrine serve`  └───────────────────────────────────┘
+ anyone: transparencykit verify https://…  ◄────GET──────│                                   │
+ browser: direct object URLs or `transparencykit serve`  └───────────────────────────────────┘
 ```
 
 SOS has no static website hosting and no event notifications. Public files are read through
-direct object URLs (`https://<bucket>.sos-<zone>.exo.io/<key>`) or through `vitrine serve`.
+direct object URLs (`https://<bucket>.sos-<zone>.exo.io/<key>`) or through `transparencykit serve`.
 The operator runs `publish` on a schedule; nothing reacts to events.
 
 ---
@@ -80,7 +80,7 @@ The operator runs `publish` on a schedule; nothing reacts to events.
 All hashing uses **canonical JSON**: UTF-8, object keys sorted lexicographically by byte,
 no insignificant whitespace, no HTML escaping, integers only (floats are rejected in ledger
 records), strings escaped per Go `encoding/json`. This matches RFC 8785 for the value types
-Vitrine allows.
+TransparencyKit allows.
 
 ### 4.2 Entry envelope
 
@@ -125,11 +125,11 @@ and run `ledger verify` after writes. v0.2 adds `ledger verify --versions` (List
 ### 4.4 Immutability
 
 Create the private bucket **with object lock** (it cannot be enabled later on SOS) and a default
-retention (e.g. GOVERNANCE, 10 years). Optionally Vitrine sets per-object retention headers
+retention (e.g. GOVERNANCE, 10 years). Optionally TransparencyKit sets per-object retention headers
 (`x-amz-object-lock-mode`, `x-amz-object-lock-retain-until-date`, plus `Content-MD5`) when
 `ledger_retention` is configured. Scope a dedicated IAM key to the bucket.
 
-### 4.5 Verification (`vitrine ledger verify`)
+### 4.5 Verification (`transparencykit ledger verify`)
 
 Fails if any of these hold:
 
@@ -230,7 +230,7 @@ original entry stays in the ledger.
 
 ---
 
-## 6. Configuration (`vitrine.json`)
+## 6. Configuration (`transparencykit.json`)
 
 ```json
 {
@@ -238,10 +238,10 @@ original entry stays in the ledger.
                 "country": "CH", "contact": "transparency@example.ch",
                 "website": "https://example.ch", "service_type": "provider of hosting services" },
   "home_jurisdictions": ["CH", "EU", "EEA"],
-  "ledger": "sos://example-ledger/vitrine?zone=ch-gva-2",
+  "ledger": "sos://example-ledger/transparencykit?zone=ch-gva-2",
   "public": "sos://example-transparency/?zone=ch-gva-2",
   "public_base_url": "https://example-transparency.sos-ch-gva-2.exo.io",
-  "signing_key": "vitrine.key",
+  "signing_key": "transparencykit.key",
   "min_count": 3,
   "ledger_retention": { "mode": "GOVERNANCE", "days": 3650 }
 }
@@ -262,7 +262,7 @@ Credentials are read from `EXOSCALE_API_KEY` / `EXOSCALE_API_SECRET`, falling ba
 
 ## 7. Publication
 
-`vitrine publish --period 2026 | 2026-H1 | 2026-H2 | 2026-01-01..2026-03-31`
+`transparencykit publish --period 2026 | 2026-H1 | 2026-H2 | 2026-01-01..2026-03-31`
 
 ### 7.1 Aggregation rules
 
@@ -285,12 +285,12 @@ DSA requires exact figures.
 ### 7.3 Output layout (public store)
 
 ```
-vitrine.pub                         Ed25519 public key (PEM), convenience copy only
+transparencykit.pub                         Ed25519 public key (PEM), convenience copy only
 latest.json                         unsigned pointer, see below
 index.html                          list of all published reports (convenience)
 reports/<label>/v<N>/
     index.html                      human-readable report
-    report.json                     schema vitrine/report/v1
+    report.json                     schema transparencykit/report/v1
     data-act-art28.html|json        as of period end
     subprocessors.json              current list as of period end
     subprocessors.atom              full change history up to period end
@@ -313,7 +313,7 @@ that report versions be explicitly marked.
 
 ```json
 {
-  "schema": "vitrine/manifest/v1",
+  "schema": "transparencykit/manifest/v1",
   "provider": "Example Cloud SA",
   "label": "2026", "version": 1,
   "period": { "start": "2026-01-01", "end": "2026-12-31" },
@@ -330,9 +330,9 @@ chain over all publications in publication order.
 
 ---
 
-## 8. Public verification (`vitrine verify`)
+## 8. Public verification (`transparencykit verify`)
 
-`vitrine verify --pubkey vitrine.pub <base-url | store-url> [reports/<label>/v<N>]`
+`transparencykit verify --pubkey transparencykit.pub <base-url | store-url> [reports/<label>/v<N>]`
 
 1. Resolve the target via `latest.json` if no path is given.
 2. Fetch `manifest.json` and `manifest.sig`, and verify the Ed25519 signature with the
@@ -350,18 +350,18 @@ Exit code 0 = verified; 1 = verification failure; 2 = usage or I/O error.
 
 | Command | Purpose |
 |---|---|
-| `vitrine init` | Write a `vitrine.json` template, generate a key pair, and print bucket setup commands. |
-| `vitrine keygen --out vitrine.key` | Ed25519 key pair (PKCS#8 / PKIX PEM, OpenSSL-compatible). |
-| `vitrine record template <type>` | Print a JSON skeleton. |
-| `vitrine record add <type> [-f file\|-] [--amends N] [--by who]` | Validate and append. |
-| `vitrine record import -f records.json` | Bulk append a JSON array of `{type, body, amends?, by?}`. Every item is validated before any write. |
-| `vitrine record retract <seq> --reason …` | Append a retraction. |
-| `vitrine record list [--type t] [--json]` / `record show <seq>` | Inspect (private fields shown — operator only). |
-| `vitrine ledger verify [--expect-head h]` | Full chain verification. |
-| `vitrine publish --period P [--out dir] [--dry-run]` | Aggregate, render, sign, upload. |
-| `vitrine verify …` | Public verification (§8). |
-| `vitrine serve [--addr :8080]` | Read-only HTTP server for the public store. |
-| `vitrine version` | |
+| `transparencykit init` | Write a `transparencykit.json` template, generate a key pair, and print bucket setup commands. |
+| `transparencykit keygen --out transparencykit.key` | Ed25519 key pair (PKCS#8 / PKIX PEM, OpenSSL-compatible). |
+| `transparencykit record template <type>` | Print a JSON skeleton. |
+| `transparencykit record add <type> [-f file\|-] [--amends N] [--by who]` | Validate and append. |
+| `transparencykit record import -f records.json` | Bulk append a JSON array of `{type, body, amends?, by?}`. Every item is validated before any write. |
+| `transparencykit record retract <seq> --reason …` | Append a retraction. |
+| `transparencykit record list [--type t] [--json]` / `record show <seq>` | Inspect (private fields shown — operator only). |
+| `transparencykit ledger verify [--expect-head h]` | Full chain verification. |
+| `transparencykit publish --period P [--out dir] [--dry-run]` | Aggregate, render, sign, upload. |
+| `transparencykit verify …` | Public verification (§8). |
+| `transparencykit serve [--addr :8080]` | Read-only HTTP server for the public store. |
+| `transparencykit version` | |
 
 ---
 
@@ -376,7 +376,7 @@ Exit code 0 = verified; 1 = verification failure; 2 = usage or I/O error.
 | Re-identification from small counts | `min_count` banding; private fields never rendered. |
 | Supply chain | Zero third-party dependencies; reproducible `CGO_ENABLED=0 -trimpath` builds. |
 
-Out of scope: a provider that never records a request in the first place. Vitrine makes
+Out of scope: a provider that never records a request in the first place. TransparencyKit makes
 recorded history tamper-evident; it cannot prove completeness. Witness co-signing and
 external auditors address this partially.
 

@@ -13,12 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/canon"
-	"github.com/exoscale/vitrine/internal/config"
-	"github.com/exoscale/vitrine/internal/ledger"
-	"github.com/exoscale/vitrine/internal/manifest"
-	"github.com/exoscale/vitrine/internal/record"
-	"github.com/exoscale/vitrine/internal/store"
+	"github.com/transparencykit/transparencykit/internal/canon"
+	"github.com/transparencykit/transparencykit/internal/config"
+	"github.com/transparencykit/transparencykit/internal/ledger"
+	"github.com/transparencykit/transparencykit/internal/manifest"
+	"github.com/transparencykit/transparencykit/internal/record"
+	"github.com/transparencykit/transparencykit/internal/store"
 )
 
 // Pointer is latest.json.
@@ -192,7 +192,7 @@ func Publish(ctx context.Context, o PublishOptions) (*Result, error) {
 	if err := add("subprocessors.json", sj, err); err != nil {
 		return nil, err
 	}
-	idBase := "urn:vitrine:" + slug(cfg.Provider.Name)
+	idBase := "urn:transparencykit:" + slug(cfg.Provider.Name)
 	sa, err := SubAtom(cfg.Provider.Name, idBase, x.SubHistory, gen)
 	if err := add("subprocessors.atom", sa, err); err != nil {
 		return nil, err
@@ -266,7 +266,7 @@ func Publish(ctx context.Context, o PublishOptions) (*Result, error) {
 		return nil, err
 	}
 	pk, _ := manifest.EncodePublic(pub)
-	if err := put("vitrine.pub", pk, false); err != nil {
+	if err := put("transparencykit.pub", pk, false); err != nil {
 		return nil, err
 	}
 	all, err := Published(ctx, o.Public)

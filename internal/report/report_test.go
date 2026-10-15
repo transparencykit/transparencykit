@@ -7,13 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/exoscale/vitrine/internal/config"
-	"github.com/exoscale/vitrine/internal/record"
+	"github.com/transparencykit/transparencykit/internal/config"
+	"github.com/transparencykit/transparencykit/internal/record"
 )
 
 func testConfig(t *testing.T) *config.Config {
 	t.Helper()
-	p := filepath.Join(t.TempDir(), "vitrine.json")
+	p := filepath.Join(t.TempDir(), "transparencykit.json")
 	os.WriteFile(p, []byte(config.Example), 0o644)
 	c, err := config.Load(p)
 	if err != nil {
@@ -272,7 +272,7 @@ func TestAtomFeed(t *testing.T) {
 	cfg := testConfig(t)
 	p, _ := ParsePeriod("2026")
 	x := Aggregate(fixture(), p, cfg.Home())
-	b, err := SubAtom("Ex SA", "urn:vitrine:ex-sa", x.SubHistory, "2027-01-10T00:00:00Z")
+	b, err := SubAtom("Ex SA", "urn:transparencykit:ex-sa", x.SubHistory, "2027-01-10T00:00:00Z")
 	if err != nil {
 		t.Fatal(err)
 	}

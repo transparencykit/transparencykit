@@ -8,26 +8,26 @@ import (
 	"testing"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/store"
+	"github.com/transparencykit/transparencykit/internal/store"
 )
 
 // TestSOSIntegration runs the store contract against a real Exoscale SOS
 // bucket. It is skipped unless these are set:
 //
-//	VITRINE_SOS_TEST_BUCKET=my-test-bucket VITRINE_SOS_TEST_ZONE=ch-gva-2
+//	TRANSPARENCYKIT_SOS_TEST_BUCKET=my-test-bucket TRANSPARENCYKIT_SOS_TEST_ZONE=ch-gva-2
 //	EXOSCALE_API_KEY=… EXOSCALE_API_SECRET=…
 //
-// Objects are written under a unique prefix (vitrine-it/<timestamp>/). If the
+// Objects are written under a unique prefix (transparencykit-it/<timestamp>/). If the
 // bucket has object lock, they cannot be deleted before retention expires, so
 // use a dedicated test bucket without lock. It also reports whether SOS
 // honours If-None-Match (conditional writes), which SPEC §4.3 relies on for
 // multi-writer safety.
 func TestSOSIntegration(t *testing.T) {
-	bucket, zone := os.Getenv("VITRINE_SOS_TEST_BUCKET"), os.Getenv("VITRINE_SOS_TEST_ZONE")
+	bucket, zone := os.Getenv("TRANSPARENCYKIT_SOS_TEST_BUCKET"), os.Getenv("TRANSPARENCYKIT_SOS_TEST_ZONE")
 	if bucket == "" || zone == "" || os.Getenv("EXOSCALE_API_KEY") == "" {
-		t.Skip("set VITRINE_SOS_TEST_BUCKET, VITRINE_SOS_TEST_ZONE, EXOSCALE_API_KEY, EXOSCALE_API_SECRET to run")
+		t.Skip("set TRANSPARENCYKIT_SOS_TEST_BUCKET, TRANSPARENCYKIT_SOS_TEST_ZONE, EXOSCALE_API_KEY, EXOSCALE_API_SECRET to run")
 	}
-	prefix := fmt.Sprintf("vitrine-it/%d", time.Now().UnixNano())
+	prefix := fmt.Sprintf("transparencykit-it/%d", time.Now().UnixNano())
 	s, err := store.Open(fmt.Sprintf("sos://%s/%s?zone=%s", bucket, prefix, zone))
 	if err != nil {
 		t.Fatal(err)

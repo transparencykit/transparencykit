@@ -1,11 +1,11 @@
-# vitrine
+# transparencykit
 
 **Tamper-evident transparency ledger and signed transparency reports for cloud providers.**
 One static binary, zero third-party dependencies, state in S3-compatible object storage
 (built for Exoscale SOS).
 
 Cloud providers make claims such as "we have never disclosed customer data to a foreign
-government" or "our infrastructure is under Swiss jurisdiction". vitrine turns those claims
+government" or "our infrastructure is under Swiss jurisdiction". transparencykit turns those claims
 into something customers, auditors and regulators can check:
 
 - **Record** government/authority requests, third-country (e.g. CLOUD Act) requests, abuse
@@ -20,7 +20,7 @@ into something customers, auditors and regulators can check:
   - a **subprocessor list** (JSON) and **change feed** (Atom).
 - **Sign** every publication with Ed25519. Manifests are hash-chained, so a silently rewritten
   past report is detectable.
-- **Verify** anything, anytime: `vitrine verify --pubkey vitrine.pub https://…`.
+- **Verify** anything, anytime: `transparencykit verify --pubkey transparencykit.pub https://…`.
 
 > Status: v0.1 (draft). The spec is in [docs/SPEC.md](docs/SPEC.md). Not legal advice. Have
 > counsel review categorisations and map DSA CSVs to the official template before filing.
@@ -28,14 +28,14 @@ into something customers, auditors and regulators can check:
 ## Quick start (local)
 
 ```sh
-go build -trimpath -o vitrine ./cmd/vitrine      # or: tools/demo.sh
-./vitrine init                                   # vitrine.json + vitrine.key/.pub
-./vitrine record template gov_request > req.json # edit it
-./vitrine record add gov_request -f req.json --by legal@example.ch
-./vitrine ledger verify
-./vitrine publish --period 2026
-./vitrine verify --pubkey vitrine.pub --chain file://$PWD/public
-./vitrine serve                                  # http://localhost:8080
+go build -trimpath -o transparencykit ./cmd/transparencykit      # or: tools/demo.sh
+./transparencykit init                                   # transparencykit.json + transparencykit.key/.pub
+./transparencykit record template gov_request > req.json # edit it
+./transparencykit record add gov_request -f req.json --by legal@example.ch
+./transparencykit ledger verify
+./transparencykit publish --period 2026
+./transparencykit verify --pubkey transparencykit.pub --chain file://$PWD/public
+./transparencykit serve                                  # http://localhost:8080
 ```
 
 `tools/demo.sh --serve` builds a full demo (fictional provider, 117 records) and serves it.
@@ -45,19 +45,19 @@ go build -trimpath -o vitrine ./cmd/vitrine      # or: tools/demo.sh
 ```sh
 export EXOSCALE_API_KEY=EXO… EXOSCALE_API_SECRET=…      # bucket-scoped IAM key recommended
 mc alias set sos https://sos-ch-gva-2.exo.io "$EXOSCALE_API_KEY" "$EXOSCALE_API_SECRET"
-mc mb --with-lock sos/acme-vitrine-ledger              # object lock: only at creation time
-mc retention set --default GOVERNANCE 3650d sos/acme-vitrine-ledger
+mc mb --with-lock sos/acme-transparencykit-ledger              # object lock: only at creation time
+mc retention set --default GOVERNANCE 3650d sos/acme-transparencykit-ledger
 mc mb sos/acme-transparency
 ```
 
 ```json
-"ledger": "sos://acme-vitrine-ledger/?zone=ch-gva-2",
+"ledger": "sos://acme-transparencykit-ledger/?zone=ch-gva-2",
 "public": "sos://acme-transparency/?zone=ch-gva-2",
 "public_base_url": "https://acme-transparency.sos-ch-gva-2.exo.io"
 ```
 
 SOS has no static website hosting. Readers use direct object URLs
-(`…/latest/index.html`) or `vitrine serve`. See [docs/OPERATIONS.md](docs/OPERATIONS.md).
+(`…/latest/index.html`) or `transparencykit serve`. See [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
 ## Commands
 
@@ -88,7 +88,7 @@ Exit codes: `0` OK, `1` verification failure, `2` usage or I/O error.
 
 ```sh
 go test -race ./...          # unit, integration (fake S3) and end-to-end (real binary) tests
-VITRINE_SOS_TEST_BUCKET=… VITRINE_SOS_TEST_ZONE=ch-gva-2 go test ./internal/store -run SOS -v
+TRANSPARENCYKIT_SOS_TEST_BUCKET=… TRANSPARENCYKIT_SOS_TEST_ZONE=ch-gva-2 go test ./internal/store -run SOS -v
 ```
 
 See [docs/TESTING.md](docs/TESTING.md) for the test plan and [AGENTS.md](AGENTS.md) for the

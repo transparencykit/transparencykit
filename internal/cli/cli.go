@@ -1,4 +1,4 @@
-// Package cli implements the vitrine command line.
+// Package cli implements the transparencykit command line.
 package cli
 
 import (
@@ -17,13 +17,13 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/config"
-	"github.com/exoscale/vitrine/internal/ledger"
-	"github.com/exoscale/vitrine/internal/manifest"
-	"github.com/exoscale/vitrine/internal/record"
-	"github.com/exoscale/vitrine/internal/report"
-	"github.com/exoscale/vitrine/internal/store"
-	"github.com/exoscale/vitrine/internal/verify"
+	"github.com/transparencykit/transparencykit/internal/config"
+	"github.com/transparencykit/transparencykit/internal/ledger"
+	"github.com/transparencykit/transparencykit/internal/manifest"
+	"github.com/transparencykit/transparencykit/internal/record"
+	"github.com/transparencykit/transparencykit/internal/report"
+	"github.com/transparencykit/transparencykit/internal/store"
+	"github.com/transparencykit/transparencykit/internal/verify"
 )
 
 // Version is set at build time via -ldflags "-X …/cli.Version=…".
@@ -51,33 +51,33 @@ func Main(args []string) int {
 	return a.Run(args)
 }
 
-const usage = `vitrine — tamper-evident transparency ledger and signed reports
+const usage = `transparencykit — tamper-evident transparency ledger and signed reports
 
 Usage:
-  vitrine init [--dir .]                          write vitrine.json + signing key
-  vitrine keygen --out vitrine.key                generate an Ed25519 key pair
-  vitrine record template <type>                  print a JSON skeleton
-  vitrine record add <type> [-f file|-] [--amends N] [--by who]
-  vitrine record import -f records.json           bulk append (validated first)
-  vitrine record retract <seq> --reason "…"
-  vitrine record list [--type t] [--json]
-  vitrine record show <seq>
-  vitrine ledger verify [--expect-head sha256:…]
-  vitrine publish --period 2026|2026-H1|2026-Q3|A..B [--out dir] [--dry-run]
-  vitrine verify --pubkey vitrine.pub <https://base | store-url> [reports/<label>/v<N>] [--chain]
-  vitrine serve [--addr :8080] [--store url]
-  vitrine version
+  transparencykit init [--dir .]                          write transparencykit.json + signing key
+  transparencykit keygen --out transparencykit.key                generate an Ed25519 key pair
+  transparencykit record template <type>                  print a JSON skeleton
+  transparencykit record add <type> [-f file|-] [--amends N] [--by who]
+  transparencykit record import -f records.json           bulk append (validated first)
+  transparencykit record retract <seq> --reason "…"
+  transparencykit record list [--type t] [--json]
+  transparencykit record show <seq>
+  transparencykit ledger verify [--expect-head sha256:…]
+  transparencykit publish --period 2026|2026-H1|2026-Q3|A..B [--out dir] [--dry-run]
+  transparencykit verify --pubkey transparencykit.pub <https://base | store-url> [reports/<label>/v<N>] [--chain]
+  transparencykit serve [--addr :8080] [--store url]
+  transparencykit version
 
 Record types: gov_request, abuse_notice, subprocessor_change, infrastructure, measures, retraction
-Global flag: --config path (default ./vitrine.json or $VITRINE_CONFIG)
+Global flag: --config path (default ./transparencykit.json or $TRANSPARENCYKIT_CONFIG)
 Credentials: EXOSCALE_API_KEY / EXOSCALE_API_SECRET (or AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
 `
 
 // Run dispatches a command.
 func (a *App) Run(args []string) int {
-	cfgPath := a.Getenv("VITRINE_CONFIG")
+	cfgPath := a.Getenv("TRANSPARENCYKIT_CONFIG")
 	if cfgPath == "" {
-		cfgPath = "vitrine.json"
+		cfgPath = "transparencykit.json"
 	}
 	// Extract a leading or anywhere --config flag.
 	var rest []string
@@ -104,7 +104,7 @@ func (a *App) Run(args []string) int {
 		fmt.Fprint(a.Stdout, usage)
 		return ExitOK
 	case "version":
-		fmt.Fprintln(a.Stdout, "vitrine", Version)
+		fmt.Fprintln(a.Stdout, "transparencykit", Version)
 		return ExitOK
 	case "init":
 		err = a.cmdInit(rest[1:])
@@ -178,36 +178,36 @@ func (a *App) cmdInit(args []string) error {
 	if err := os.MkdirAll(*dir, 0o755); err != nil {
 		return err
 	}
-	cp := filepath.Join(*dir, "vitrine.json")
+	cp := filepath.Join(*dir, "transparencykit.json")
 	if _, err := os.Stat(cp); err == nil {
 		return fmt.Errorf("%s already exists", cp)
 	}
 	if err := os.WriteFile(cp, []byte(config.Example), 0o644); err != nil {
 		return err
 	}
-	kp := filepath.Join(*dir, "vitrine.key")
-	pub, err := manifest.GenerateKey(kp, filepath.Join(*dir, "vitrine.pub"))
+	kp := filepath.Join(*dir, "transparencykit.key")
+	pub, err := manifest.GenerateKey(kp, filepath.Join(*dir, "transparencykit.pub"))
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(a.Stdout, `Wrote %s, %s (keep secret) and vitrine.pub (key %s).
+	fmt.Fprintf(a.Stdout, `Wrote %s, %s (keep secret) and transparencykit.pub (key %s).
 
 Next steps for Exoscale SOS (see docs/OPERATIONS.md):
   1. Create the private ledger bucket WITH object lock (cannot be enabled later), e.g. with MinIO client:
        mc alias set sos https://sos-ch-gva-2.exo.io "$EXOSCALE_API_KEY" "$EXOSCALE_API_SECRET"
-       mc mb --with-lock sos/<org>-vitrine-ledger
-       mc retention set --default GOVERNANCE 3650d sos/<org>-vitrine-ledger
+       mc mb --with-lock sos/<org>-transparencykit-ledger
+       mc retention set --default GOVERNANCE 3650d sos/<org>-transparencykit-ledger
   2. Create the public bucket:  mc mb sos/<org>-transparency
-  3. Edit vitrine.json: "ledger": "sos://<org>-vitrine-ledger/?zone=ch-gva-2",
+  3. Edit transparencykit.json: "ledger": "sos://<org>-transparencykit-ledger/?zone=ch-gva-2",
                         "public": "sos://<org>-transparency/?zone=ch-gva-2"
-  4. Publish vitrine.pub out-of-band (website, contracts, DNS) so verifiers can trust it.
+  4. Publish transparencykit.pub out-of-band (website, contracts, DNS) so verifiers can trust it.
 `, cp, kp, manifest.KeyID(pub))
 	return nil
 }
 
 func (a *App) cmdKeygen(args []string) error {
 	fs := a.flags("keygen")
-	out := fs.String("out", "vitrine.key", "private key path (public key written next to it as .pub)")
+	out := fs.String("out", "transparencykit.key", "private key path (public key written next to it as .pub)")
 	if _, err := parse(fs, args); err != nil {
 		return err
 	}
@@ -503,7 +503,7 @@ func (a *App) cmdPublish(ctx context.Context, cfgPath string, args []string) err
 		pubURL = "file://" + abs
 	}
 	if pubURL == "" {
-		return errors.New("no public store: set \"public\" in vitrine.json or use --out")
+		return errors.New("no public store: set \"public\" in transparencykit.json or use --out")
 	}
 	ps, err := store.Open(pubURL)
 	if err != nil {
@@ -562,8 +562,8 @@ func (a *App) cmdVerify(ctx context.Context, args []string) (int, error) {
 	}
 	var pb []byte
 	if *pubPath == "" {
-		fmt.Fprintln(a.Stderr, "WARNING: no --pubkey given; using vitrine.pub served next to the reports. This proves integrity, not authenticity.")
-		pb, err = f.Fetch(ctx, "vitrine.pub")
+		fmt.Fprintln(a.Stderr, "WARNING: no --pubkey given; using transparencykit.pub served next to the reports. This proves integrity, not authenticity.")
+		pb, err = f.Fetch(ctx, "transparencykit.pub")
 	} else {
 		pb, err = os.ReadFile(*pubPath)
 	}

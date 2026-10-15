@@ -9,7 +9,7 @@ import (
 
 func TestLoadExampleAndDefaults(t *testing.T) {
 	d := t.TempDir()
-	p := filepath.Join(d, "vitrine.json")
+	p := filepath.Join(d, "transparencykit.json")
 	os.WriteFile(p, []byte(Example), 0o644)
 	c, err := Load(p)
 	if err != nil {
@@ -21,7 +21,7 @@ func TestLoadExampleAndDefaults(t *testing.T) {
 	if got := c.Resolve("file://./ledger"); got != "file://"+filepath.Join(d, "ledger") {
 		t.Fatalf("resolve file url: %s", got)
 	}
-	if got := c.Resolve("vitrine.key"); got != filepath.Join(d, "vitrine.key") {
+	if got := c.Resolve("transparencykit.key"); got != filepath.Join(d, "transparencykit.key") {
 		t.Fatalf("resolve path: %s", got)
 	}
 	if got := c.Resolve("sos://b/?zone=ch-gva-2"); got != "sos://b/?zone=ch-gva-2" {

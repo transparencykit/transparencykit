@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/geo"
-	"github.com/exoscale/vitrine/internal/record"
+	"github.com/transparencykit/transparencykit/internal/geo"
+	"github.com/transparencykit/transparencykit/internal/record"
 )
 
 // Period is an inclusive UTC date range.

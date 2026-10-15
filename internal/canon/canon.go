@@ -1,7 +1,7 @@
 // Package canon produces canonical JSON and content hashes.
 //
 // Canonical form: object keys sorted, no insignificant whitespace, no HTML
-// escaping, integers only. For the value types Vitrine allows this matches
+// escaping, integers only. For the value types TransparencyKit allows this matches
 // RFC 8785 (JCS).
 package canon
 

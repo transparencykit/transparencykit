@@ -1,4 +1,4 @@
-// Package config loads vitrine.json.
+// Package config loads transparencykit.json.
 package config
 
 import (
@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/exoscale/vitrine/internal/geo"
-	"github.com/exoscale/vitrine/internal/store"
+	"github.com/transparencykit/transparencykit/internal/geo"
+	"github.com/transparencykit/transparencykit/internal/store"
 )
 
 // Provider identifies the publishing organisation.
@@ -41,7 +41,7 @@ type Config struct {
 func Load(path string) (*Config, error) {
 	b, err := os.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("config: %w (run `vitrine init`?)", err)
+		return nil, fmt.Errorf("config: %w (run `transparencykit init`?)", err)
 	}
 	var c Config
 	dec := json.NewDecoder(bytes.NewReader(b))
@@ -116,7 +116,7 @@ func (c *Config) Home() geo.Set {
 	return s
 }
 
-// Example is the template written by `vitrine init`.
+// Example is the template written by `transparencykit init`.
 const Example = `{
   "provider": {
     "name": "Example Cloud SA",
@@ -130,7 +130,7 @@ const Example = `{
   "ledger": "file://./ledger",
   "public": "file://./public",
   "public_base_url": "",
-  "signing_key": "vitrine.key",
+  "signing_key": "transparencykit.key",
   "min_count": 3
 }
 `

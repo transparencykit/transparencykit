@@ -10,8 +10,8 @@ for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64; d
   os=${target%/*}; arch=${target#*/}
   ext=""; [ "$os" = windows ] && ext=".exe"
   CGO_ENABLED=0 GOOS=$os GOARCH=$arch go build -trimpath -buildvcs=false \
-    -ldflags "-s -w -X github.com/exoscale/vitrine/internal/cli.Version=$version" \
-    -o "$out/vitrine-$version-$os-$arch$ext" "$root/cmd/vitrine"
+    -ldflags "-s -w -X github.com/transparencykit/transparencykit/internal/cli.Version=$version" \
+    -o "$out/transparencykit-$version-$os-$arch$ext" "$root/cmd/transparencykit"
 done
-(cd "$out" && sha256sum vitrine-* > SHA256SUMS)
+(cd "$out" && sha256sum transparencykit-* > SHA256SUMS)
 cat "$out/SHA256SUMS"

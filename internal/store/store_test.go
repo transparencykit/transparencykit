@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/exoscale/vitrine/internal/s3fake"
-	"github.com/exoscale/vitrine/internal/store"
+	"github.com/transparencykit/transparencykit/internal/s3fake"
+	"github.com/transparencykit/transparencykit/internal/store"
 )
 
 func newS3(t *testing.T, srv *s3fake.Server, prefix string) store.Store {
@@ -90,9 +90,9 @@ func TestS3StoreContractWithPaginationAndPrefix(t *testing.T) {
 	srv := s3fake.New()
 	defer srv.Close()
 	srv.PageSize = 2 // force several ListObjectsV2 pages
-	s := newS3(t, srv, "vitrine/ledger")
+	s := newS3(t, srv, "transparencykit/ledger")
 	contract(t, s)
-	if _, _, ok := srv.Object("bkt", "vitrine/ledger/records/000000000001.json"); !ok {
+	if _, _, ok := srv.Object("bkt", "transparencykit/ledger/records/000000000001.json"); !ok {
 		t.Fatal("prefix not applied to object keys")
 	}
 }
@@ -148,7 +148,7 @@ func TestOpenURLs(t *testing.T) {
 		url, want string
 		bad       bool
 	}{
-		{url: "sos://ledger/vitrine?zone=ch-gva-2", want: "s3://ledger/vitrine @ https://sos-ch-gva-2.exo.io"},
+		{url: "sos://ledger/transparencykit?zone=ch-gva-2", want: "s3://ledger/transparencykit @ https://sos-ch-gva-2.exo.io"},
 		{url: "sos://ledger?zone=de-fra-1", want: "s3://ledger @ https://sos-de-fra-1.exo.io"},
 		{url: "s3://b/p?endpoint=https://s3.example.com&region=eu-1", want: "s3://b/p @ https://s3.example.com"},
 		{url: "sos://ledger/x", bad: true},
