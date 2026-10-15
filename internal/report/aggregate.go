@@ -18,8 +18,37 @@ type Period struct {
 	Label string `json:"label"`
 	Start string `json:"start"`
 	End   string `json:"end"`
+	// AsOf is the date at which state-like disclosures (infrastructure,
+	// measures, current subprocessors) are taken: the period end, or the
+	// publication date if the period has not ended yet. Counts still cover
+	// the whole period.
+	AsOf  string `json:"as_of,omitempty"`
 	start time.Time
 	end   time.Time // exclusive (day after End)
+	state time.Time // exclusive (day after AsOf); zero = end
+}
+
+// WithAsOf caps the state date at day (YYYY-MM-DD semantics, UTC). A day after
+// the period end is ignored.
+func (p Period) WithAsOf(day time.Time) Period {
+	day = day.UTC()
+	d := time.Date(day.Year(), day.Month(), day.Day(), 0, 0, 0, 0, time.UTC).AddDate(0, 0, 1)
+	if d.After(p.end) {
+		d = p.end
+	}
+	if d.Before(p.start.AddDate(0, 0, 1)) {
+		d = p.start.AddDate(0, 0, 1)
+	}
+	p.state = d
+	p.AsOf = d.AddDate(0, 0, -1).Format("2006-01-02")
+	return p
+}
+
+func (p Period) stateEnd() time.Time {
+	if p.state.IsZero() {
+		return p.end
+	}
+	return p.state
 }
 
 var (
@@ -72,17 +101,22 @@ func (p Period) ContainsTS(ts string) bool {
 	return !t.Before(p.start) && t.Before(p.end)
 }
 
-// ContainsDate reports whether a YYYY-MM-DD date is in the period.
+// ContainsDate reports whether a YYYY-MM-DD date is in the period, up to the
+// state date.
 func (p Period) ContainsDate(d string) bool {
 	t, err := time.Parse("2006-01-02", d)
-	return err == nil && !t.Before(p.start) && t.Before(p.end)
+	return err == nil && !t.Before(p.start) && t.Before(p.stateEnd())
 }
 
-// NotAfterEnd reports whether a date is on or before the period end.
+// NotAfterEnd reports whether a date is on or before the state date (the
+// period end, or the as-of date if earlier).
 func (p Period) NotAfterEnd(d string) bool {
 	t, err := time.Parse("2006-01-02", d)
-	return err == nil && t.Before(p.end)
+	return err == nil && t.Before(p.stateEnd())
 }
+
+// StateDate is the inclusive as-of date for state-like disclosures.
+func (p Period) StateDate() string { return p.stateEnd().AddDate(0, 0, -1).Format("2006-01-02") }
 
 // ---------------------------------------------------------------------------
 // Exact aggregates (never banded; used for DSA CSVs and as banding input).
@@ -173,7 +207,8 @@ type Exact struct {
 
 	Subprocessors []SubprocessorOut
 	SubChanges    []SubChangeOut
-	SubHistory    []SubChangeOut // all changes up to period end (feed)
+	SubHistory    []SubChangeOut // all changes up to the state date (feed)
+	SubUpcoming   []SubChangeOut // announced changes effective after the state date
 	Infra         []InfraOut
 	Measures      *MeasuresOut
 }
@@ -341,11 +376,12 @@ func Aggregate(recs []record.Effective, p Period, home geo.Set) *Exact {
 				c.AutomatedActions++
 			}
 		case *record.SubprocessorChange:
-			if !p.NotAfterEnd(b.Effective) {
-				continue
-			}
 			ch := SubChangeOut{Seq: r.Seq, Effective: b.Effective, Change: b.Change, Name: b.Name,
 				Purpose: b.Purpose, Locations: b.Locations, Services: b.Services, NoticeGiven: b.NoticeGiven}
+			if !p.NotAfterEnd(b.Effective) {
+				x.SubUpcoming = append(x.SubUpcoming, ch)
+				continue
+			}
 			x.SubHistory = append(x.SubHistory, ch)
 			if p.ContainsDate(b.Effective) {
 				x.SubChanges = append(x.SubChanges, ch)
@@ -396,6 +432,7 @@ func Aggregate(recs []record.Effective, p Period, home geo.Set) *Exact {
 	}
 	sort.Slice(x.Subprocessors, func(i, j int) bool { return x.Subprocessors[i].Name < x.Subprocessors[j].Name })
 	sort.SliceStable(x.SubChanges, func(i, j int) bool { return x.SubChanges[i].Effective < x.SubChanges[j].Effective })
+	sort.SliceStable(x.SubUpcoming, func(i, j int) bool { return x.SubUpcoming[i].Effective < x.SubUpcoming[j].Effective })
 	for _, z := range infra {
 		if z.Status == "retired" {
 			continue

@@ -15,7 +15,8 @@ trap 'rm -rf "$work"' EXIT
 CGO_ENABLED=0 go build -trimpath -o "$work/tkit" "$root/cmd/tkit"
 cp "$root/examples/so-sovereign-cloud/transparencykit.json" \
    "$root/examples/so-sovereign-cloud/transparencykit.key" \
-   "$root/examples/so-sovereign-cloud/transparencykit.pub" "$work/"
+   "$root/examples/so-sovereign-cloud/transparencykit.pub" \
+   "$root/examples/so-sovereign-cloud/dsa-qualitative.json" "$work/"
 cd "$work"
 ./tkit record import -f "$root/examples/so-sovereign-cloud/records.json"
 ./tkit ledger verify

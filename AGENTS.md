@@ -17,7 +17,13 @@ If you change behaviour, update the spec in the same change.
   Any change needs `"v": 2` handling and a migration note.
 - **Never publish `private`.** Projection types in `internal/report` (`*Out`) are the only things
   rendered. Don't render `record.*` structs directly.
-- Breakdown cells go through `Bander`; DSA CSVs never do.
+- Breakdown cells go through `Bander` and then `policy.check` (`internal/report/disclosure.go`), which
+  withholds breakdowns whose banded cells can be calculated from the total; derived figures (rates,
+  medians) use `rateCell` / `medianCell`. DSA CSVs are never banded.
+- `latest/` must stay a byte-identical copy of a signed publication (default `verify` checks it).
+- Every publish walks the chain from `latest.json`; never write a signed publication that the chain
+  cannot reach (`readChain` in `publish.go` links back or refuses).
+- Local ledger files are 0700/0600 (`PutOptions.Public` false); the file store refuses symlinks.
 - Write nothing to the ledger bucket except `records/*`, and never overwrite: object lock keeps every version (SOS caps 1000 versions/object). Storage prerequisites: `docs/storage.md`.
 - Keep `CGO_ENABLED=0` builds working (`TestStaticBinary`).
 
@@ -31,18 +37,18 @@ If you change behaviour, update the spec in the same change.
 | `internal/ledger` | Append protocol (list → check head → create-only PUT, retry) and verification on a `store.Store` |
 | `internal/store` | `Store` interface; `File`; `S3` + hand-written SigV4; URL parsing (`file://`, `sos://`, `s3://`) |
 | `internal/s3fake` | In-memory S3 server for tests (pagination, If-None-Match, payload hash checks) |
-| `internal/report` | Period parsing, exact aggregation, banded public model, HTML/JSON/Atom/DSA CSV rendering, `Publish` |
+| `internal/report` | Period parsing and as-of date, exact aggregation, banded public model, disclosure control (`disclosure.go`), HTML/JSON/Atom/DSA CSV rendering, `Publish` (chain repair, abandoned versions, drafts) |
 | `internal/manifest` | Manifest schema, Ed25519 keys (PKCS#8/PKIX PEM), sign/verify |
-| `internal/verify` | Public verification over HTTP or a store, manifest chain walking |
+| `internal/verify` | Public verification over HTTP or a store: `latest/` copies, chain from `chain_head`, sequence positions, multiple keys, checkpoints |
 | `internal/config`, `internal/geo` | `transparencykit.json`; EU/EEA sets and ISO-country checks |
 | `cmd/tkit` | Same program under the short name `tkit` |
-| `tools/` | Reusable scripts (`demo.sh`, `release.sh`) and `tools/site/` (website builder) |
+| `tools/` | Reusable scripts (`demo.sh`, `example.sh`, `release.sh`) and `tools/site/` (website builder) |
 | `tools/site/` | Node + marked: landing page `src/index.html`, `src/style.css`, renders `docs/*.md` (nav order in `build.mjs` `DOCS`) |
 | `examples/so-sovereign-cloud/` | Fictional provider "So Sovereign Cloud SA": records, config, demo-only key; published at /example/ by `tools/example.sh` |
 
 ## Commands
 ```sh
-go test -race ./...                 # all tests (about 50; fake S3, real binary)
+go test -race ./...                 # all tests (about 70; fake S3, real binary)
 tools/demo.sh --serve               # demo publication on :8080
 tools/release.sh v0.1.0             # static binaries (transparencykit + tkit) + SHA256SUMS
 cd tools/site && npm ci && node build.mjs   # website into _site/ (deployed by .github/workflows/pages.yml)
@@ -52,5 +58,8 @@ cd tools/site && npm ci && node build.mjs   # website into _site/ (deployed by .
 - Repository: github.com/transparencykit/transparencykit (GitHub org `transparencykit`); website transparencykit.dev.
 - Validate DSA CSV headers byte-for-byte against the official Annex I template (SPEC §2 caveat).
 - Confirm SOS `If-None-Match` behaviour with `TestSOSIntegration`; document the result in the SPEC.
-- v0.2: `ledger verify --versions`, signed key rotation, `canary.json`, XLSX export.
+- v0.2: `ledger verify --versions`, authenticated key rotation, `canary.json`, XLSX export.
+- Disclosure control checks one breakdown at a time; cross-table and cross-version inference is
+  not checked (SPEC §7.2). Secondary suppression (instead of withholding a whole breakdown) would
+  keep more information.
 - v0.3: anchor manifest hashes in a public transparency log (Sigsum or Tessera + witnesses).

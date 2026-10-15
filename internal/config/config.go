@@ -25,14 +25,21 @@ type Provider struct {
 
 // Config is the operator configuration.
 type Config struct {
-	Provider          Provider         `json:"provider"`
-	HomeJurisdictions []string         `json:"home_jurisdictions"`
-	Ledger            string           `json:"ledger"`
-	Public            string           `json:"public"`
-	PublicBaseURL     string           `json:"public_base_url,omitempty"`
-	SigningKey        string           `json:"signing_key"`
-	MinCount          int              `json:"min_count"`
-	LedgerRetention   *store.Retention `json:"ledger_retention,omitempty"`
+	Provider          Provider `json:"provider"`
+	HomeJurisdictions []string `json:"home_jurisdictions"`
+	Ledger            string   `json:"ledger"`
+	Public            string   `json:"public"`
+	PublicBaseURL     string   `json:"public_base_url,omitempty"`
+	SigningKey        string   `json:"signing_key"`
+	MinCount          int      `json:"min_count"`
+	// DerivableCounts: "withhold" (default) removes a breakdown whose banded
+	// counts could be calculated from its published total; "publish" keeps it
+	// and reports it in report.json "withheld" as a warning.
+	DerivableCounts string `json:"derivable_counts,omitempty"`
+	// DSAQualitative is a JSON file with the DSA qualitative answers
+	// (keys: own_initiative, automated_means, training, other).
+	DSAQualitative  string           `json:"dsa_qualitative,omitempty"`
+	LedgerRetention *store.Retention `json:"ledger_retention,omitempty"`
 
 	dir string
 }
@@ -76,6 +83,9 @@ func (c *Config) Validate() error {
 	}
 	if c.Ledger == "" {
 		errs = append(errs, "ledger store URL is required")
+	}
+	if d := c.DerivableCounts; d != "" && d != "withhold" && d != "publish" {
+		errs = append(errs, `derivable_counts must be "withhold" or "publish"`)
 	}
 	if c.MinCount < 1 {
 		errs = append(errs, "min_count must be >= 1")

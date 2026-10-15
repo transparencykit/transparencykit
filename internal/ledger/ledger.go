@@ -3,6 +3,7 @@ package ledger
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -128,15 +129,9 @@ func (l *Ledger) Append(ctx context.Context, typ string, rawBody []byte, by stri
 			}
 			prev = le.Hash
 		}
-		if amends != 0 {
-			if err := l.checkAmends(ctx, typ, amends, last); err != nil {
-				return nil, err
-			}
-		}
-		if r, ok := body.(*record.Retraction); ok {
-			if err := l.checkRetract(ctx, r.Seq, last); err != nil {
-				return nil, err
-			}
+		lookup := func(seq int64) (*record.Entry, error) { return l.get(ctx, seq, last) }
+		if err := checkRefs(lookup, typ, body, amends); err != nil {
+			return nil, err
 		}
 		e, err := record.New(last+1, prev, typ, body, by, amends, l.now())
 		if err != nil {
@@ -170,30 +165,74 @@ func (l *Ledger) get(ctx context.Context, seq, last int64) (*record.Entry, error
 	return record.Parse(b)
 }
 
-func (l *Ledger) checkAmends(ctx context.Context, typ string, seq, last int64) error {
-	t, err := l.get(ctx, seq, last)
-	if err != nil {
-		return fmt.Errorf("amends: %w", err)
+// checkRefs validates the references of a new record: an amendment must
+// target an original record of the same type, a retraction an original record.
+func checkRefs(get func(int64) (*record.Entry, error), typ string, body any, amends int64) error {
+	if amends != 0 {
+		if typ == record.TypeRetraction {
+			return fmt.Errorf("retractions cannot be amended")
+		}
+		t, err := get(amends)
+		if err != nil {
+			return fmt.Errorf("amends: %w", err)
+		}
+		if t.Type != typ {
+			return fmt.Errorf("amends: seq %d is a %s, not a %s", amends, t.Type, typ)
+		}
+		if t.Amends != 0 {
+			return fmt.Errorf("amends: seq %d is itself an amendment of %d; amend %d", amends, t.Amends, t.Amends)
+		}
 	}
-	if t.Type != typ {
-		return fmt.Errorf("amends: seq %d is a %s, not a %s", seq, t.Type, typ)
-	}
-	if t.Amends != 0 {
-		return fmt.Errorf("amends: seq %d is itself an amendment of %d; amend %d", seq, t.Amends, t.Amends)
-	}
-	if typ == record.TypeRetraction {
-		return fmt.Errorf("retractions cannot be amended")
+	if r, ok := body.(*record.Retraction); ok {
+		t, err := get(r.Seq)
+		if err != nil {
+			return fmt.Errorf("retract: %w", err)
+		}
+		if t.Type == record.TypeRetraction || t.Amends != 0 {
+			return fmt.Errorf("retract: seq %d must be an original record (not a retraction or amendment)", r.Seq)
+		}
 	}
 	return nil
 }
 
-func (l *Ledger) checkRetract(ctx context.Context, seq, last int64) error {
-	t, err := l.get(ctx, seq, last)
+// Item is one record to append.
+type Item struct {
+	Type   string          `json:"type"`
+	Body   json.RawMessage `json:"body"`
+	Amends int64           `json:"amends"`
+	By     string          `json:"by"`
+}
+
+// Check validates items as if they were appended in order after the current
+// head, without writing anything. Items may refer to existing records and to
+// earlier items of the batch (by the sequence number they will receive). It
+// returns the current head sequence number.
+func (l *Ledger) Check(ctx context.Context, items []Item) (int64, error) {
+	es, head, err := l.Verify(ctx)
 	if err != nil {
-		return fmt.Errorf("retract: %w", err)
+		return 0, fmt.Errorf("ledger: %w", err)
 	}
-	if t.Type == record.TypeRetraction || t.Amends != 0 {
-		return fmt.Errorf("retract: seq %d must be an original record (not a retraction or amendment)", seq)
+	known := map[int64]*record.Entry{}
+	for _, e := range es {
+		known[e.Seq] = e
 	}
-	return nil
+	last := head.Seq
+	get := func(seq int64) (*record.Entry, error) {
+		if e, ok := known[seq]; ok {
+			return e, nil
+		}
+		return nil, fmt.Errorf("seq %d does not exist (head is %d)", seq, last)
+	}
+	for i, it := range items {
+		body, err := record.DecodeBody(it.Type, it.Body)
+		if err != nil {
+			return head.Seq, fmt.Errorf("item %d: %w", i+1, err)
+		}
+		if err := checkRefs(get, it.Type, body, it.Amends); err != nil {
+			return head.Seq, fmt.Errorf("item %d: %w", i+1, err)
+		}
+		last++
+		known[last] = &record.Entry{Seq: last, Type: it.Type, Amends: it.Amends}
+	}
+	return head.Seq, nil
 }

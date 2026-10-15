@@ -139,8 +139,14 @@ func TestE2ELocal(t *testing.T) {
 	var rj map[string]any
 	json.Unmarshal(rep, &rj)
 	gov := rj["government_requests"].(map[string]any)
-	if gov["by_outcome"].(map[string]any)["pending"] != float64(0) {
-		t.Fatalf("amendment not applied: %v", gov["by_outcome"])
+	// Two requests, both outcomes banded: with the exact total the split is
+	// computable, so the breakdown is withheld (review S6).
+	if gov["by_outcome"] != nil || !strings.Contains(string(rep), `"government_requests.by_outcome"`) {
+		t.Fatalf("outcome breakdown must be withheld: %v", gov["by_outcome"])
+	}
+	if eff := r.ok("", "record", "list", "--effective", "--type", "gov_request"); !strings.Contains(eff, "amended by #") ||
+		!strings.Contains(eff, "rejected") || strings.Contains(eff, "pending") {
+		t.Fatalf("amendment not applied:\n%s", eff)
 	}
 	filepath.Walk(pubDir, func(p string, info os.FileInfo, err error) error {
 		if info.IsDir() {

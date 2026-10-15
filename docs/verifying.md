@@ -21,10 +21,21 @@ tkit verify --pubkey acme.pub --chain https://transparency.acme.example
 Example output:
 
 ```text
-ok  reports/2026/v2/manifest.json  (2026 v2, 14 files, ledger #1234)
-ok  reports/2026/v1/manifest.json  (2026 v1, 14 files, ledger #1180)
-verified 2 publication(s) with key ed25519:2f3f8628f71f2838
+ok  reports/2026/v2/manifest.json  (2026 v2, publication #2, 16 files, ledger #1234)
+ok  latest/manifest.json  (2026 v2, publication #2, 16 files, ledger #1234)
+ok  reports/2026/v1/manifest.json  (2026 v1, publication #1, 16 files, ledger #1180)
+verified 2 publication(s) with trusted key(s) ed25519:2f3f8628f71f2838
 ```
+
+Without a path, the check covers the report `latest.json` points to **and** the `latest/` copies
+readers open, which must be byte-identical to it. `--chain` starts from the newest publication of
+any period, so a corrected older period (published after a newer one) is checked too.
+
+| Option | Use it when |
+|---|---|
+| `--pubkey file` (repeatable) | Always. Pass every key the provider has announced; a file may hold several keys. A history spanning a key rotation needs the old and the new key. |
+| `--chain` | You want the whole history, not only the current report. |
+| `--checkpoint seen.json` | You check regularly. The file remembers every publication seen; a later run fails if one of them disappears or changes, which is how a rewritten or forked history shows. |
 
 | Exit code | Meaning |
 |---|---|
@@ -50,8 +61,8 @@ and its [Data Act page](https://transparencykit.github.io/transparencykit/exampl
 - **The files are the ones the provider signed.** Every published file is listed in
   `manifest.json` with its SHA-256 hash and size, and the manifest is signed with Ed25519.
 - **Past reports were not quietly rewritten.** Each manifest records the hash of the previous
-  one. With `--chain`, the check walks back to the first publication. A correction appears as a
-  new version, never as an edit.
+  one and its position in the history. With `--chain`, the check walks back to the first
+  publication. A correction appears as a new version, never as an edit.
 - **The numbers come from one specific ledger state.** Each manifest commits to the hash of the
   provider's private ledger. An auditor with ledger access can confirm it with
   `tkit ledger verify --expect-head <hash>`.
@@ -60,11 +71,17 @@ and its [Data Act page](https://transparencykit.github.io/transparencykit/exampl
 
 A signature cannot show that a provider recorded every request it received. TransparencyKit
 makes the recorded history tamper-evident; completeness still rests on the provider's process
-and on external audit. Keep your own copies of manifests you have checked: they make any later
-rewrite detectable.
+and on external audit.
+
+Everything you fetch comes from the provider. Someone holding the signing key could show a new
+verifier a different, self-consistent history. Use `--checkpoint` (or keep copies of manifests you
+checked) so that any later rewrite of what you saw is detected.
 
 ## Small numbers
 
 Breakdowns show counts between 1 and the provider's threshold (by default 1–2) as a range, to
 avoid identifying individual customers. Zero is always shown exactly, so a statement such as "0
-disclosures to third-country authorities" is checkable. The DSA CSV files are always exact.
+disclosures to third-country authorities" is checkable. When a range could be resolved by
+subtracting from a published total, the breakdown is marked as withheld (`report.json` lists
+these under `withheld`), and the disclosure rate is shown as a range. The DSA CSV files are
+always exact.

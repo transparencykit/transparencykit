@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -47,10 +48,14 @@ type LedgerRef struct {
 
 // Manifest describes one publication.
 type Manifest struct {
-	Schema      string    `json:"schema"`
-	Provider    string    `json:"provider"`
-	Label       string    `json:"label"`
-	Version     int       `json:"version"`
+	Schema   string `json:"schema"`
+	Provider string `json:"provider"`
+	Label    string `json:"label"`
+	Version  int    `json:"version"`
+	// Sequence numbers publications 1, 2, 3… in publication order across all
+	// periods; Previous links to Sequence-1. Verifiers use it to detect
+	// truncated chains and, with checkpoints, forks.
+	Sequence    int       `json:"sequence"`
 	Period      Period    `json:"period"`
 	GeneratedAt string    `json:"generated_at"`
 	Ledger      LedgerRef `json:"ledger"`
@@ -101,17 +106,46 @@ func GenerateKey(privPath, pubPath string) (ed25519.PublicKey, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := os.Stat(privPath); err == nil {
-		return nil, fmt.Errorf("%s already exists; refusing to overwrite", privPath)
+	if filepathClean(privPath) == filepathClean(pubPath) {
+		return nil, fmt.Errorf("private and public key paths are the same (%s)", privPath)
 	}
-	if err := os.WriteFile(privPath, pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY", Bytes: der}), 0o600); err != nil {
-		return nil, err
+	for _, p := range []string{privPath, pubPath} {
+		if _, err := os.Lstat(p); err == nil {
+			return nil, fmt.Errorf("%s already exists; refusing to overwrite", p)
+		}
 	}
 	pb, err := EncodePublic(pub)
 	if err != nil {
 		return nil, err
 	}
-	return pub, os.WriteFile(pubPath, pb, 0o644)
+	if err := writeNew(privPath, pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY", Bytes: der}), 0o600); err != nil {
+		return nil, err
+	}
+	if err := writeNew(pubPath, pb, 0o644); err != nil {
+		os.Remove(privPath)
+		return nil, err
+	}
+	return pub, nil
+}
+
+func filepathClean(p string) string {
+	if a, err := filepath.Abs(p); err == nil {
+		return a
+	}
+	return filepath.Clean(p)
+}
+
+// writeNew creates a file that must not exist yet (O_EXCL).
+func writeNew(path string, b []byte, mode os.FileMode) error {
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, mode)
+	if err != nil {
+		return err
+	}
+	if _, err := f.Write(b); err != nil {
+		f.Close()
+		return err
+	}
+	return f.Close()
 }
 
 // EncodePublic returns PKIX PEM bytes.
@@ -142,6 +176,35 @@ func LoadPrivate(path string) (ed25519.PrivateKey, error) {
 		return nil, fmt.Errorf("%s: not an Ed25519 key", path)
 	}
 	return ek, nil
+}
+
+// ParsePublicAll parses every PKIX PEM Ed25519 public key in b (a file may
+// hold the current key and retired ones).
+func ParsePublicAll(b []byte) ([]ed25519.PublicKey, error) {
+	var out []ed25519.PublicKey
+	for {
+		var blk *pem.Block
+		blk, b = pem.Decode(b)
+		if blk == nil {
+			break
+		}
+		if blk.Type != "PUBLIC KEY" {
+			continue
+		}
+		k, err := x509.ParsePKIXPublicKey(blk.Bytes)
+		if err != nil {
+			return nil, err
+		}
+		ek, ok := k.(ed25519.PublicKey)
+		if !ok {
+			return nil, errors.New("public key: not Ed25519")
+		}
+		out = append(out, ek)
+	}
+	if len(out) == 0 {
+		return nil, errors.New("public key: no PEM PUBLIC KEY block")
+	}
+	return out, nil
 }
 
 // ParsePublic parses a PKIX PEM Ed25519 public key.

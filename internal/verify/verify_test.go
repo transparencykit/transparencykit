@@ -81,7 +81,7 @@ func TestPublishVerifyChainAndTamper(t *testing.T) {
 		t.Fatal("expected v2")
 	}
 	f := verify.Store{S: e.pub}
-	o := verify.Options{Pub: e.pk, Chain: true}
+	o := verify.Options{Keys: []ed25519.PublicKey{e.pk}, Chain: true}
 	got, err := verify.Run(ctx, f, "", o)
 	if err != nil {
 		t.Fatal(err)
@@ -93,7 +93,7 @@ func TestPublishVerifyChainAndTamper(t *testing.T) {
 		t.Fatal("v2 must link v1")
 	}
 	// latest/ is independently verifiable.
-	if _, err := verify.Run(ctx, f, "latest", verify.Options{Pub: e.pk}); err != nil {
+	if _, err := verify.Run(ctx, f, "latest", verify.Options{Keys: []ed25519.PublicKey{e.pk}}); err != nil {
 		t.Fatalf("latest/: %v", err)
 	}
 	// Publishing an earlier period does not move latest/, but extends the chain.
@@ -111,7 +111,7 @@ func TestPublishVerifyChainAndTamper(t *testing.T) {
 
 	// Wrong key.
 	other, _ := manifest.GenerateKey(filepath.Join(t.TempDir(), "o.key"), filepath.Join(t.TempDir(), "o.pub"))
-	if _, err := verify.Run(ctx, f, "", verify.Options{Pub: other}); !verify.IsFailure(err) {
+	if _, err := verify.Run(ctx, f, "", verify.Options{Keys: []ed25519.PublicKey{other}}); !verify.IsFailure(err) {
 		t.Fatalf("wrong key: %v", err)
 	}
 	// Tamper one byte of a published file in v1.
@@ -170,7 +170,7 @@ func TestVerifyOverHTTP(t *testing.T) {
 	e.publish(t, "2026")
 	srv := httptest.NewServer(cli.Handler(e.pub))
 	defer srv.Close()
-	got, err := verify.Run(context.Background(), verify.HTTP{Base: srv.URL}, "", verify.Options{Pub: e.pk, Chain: true})
+	got, err := verify.Run(context.Background(), verify.HTTP{Base: srv.URL}, "", verify.Options{Keys: []ed25519.PublicKey{e.pk}, Chain: true})
 	if err != nil || len(got) != 1 {
 		t.Fatalf("http verify: %v", err)
 	}

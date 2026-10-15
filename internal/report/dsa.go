@@ -104,7 +104,13 @@ func CategoryName(c string) string {
 }
 
 // DSAFiles renders the DSA CSV set (file name -> bytes).
-func DSAFiles(x *Exact, cfg *config.Config, p Period, version int, generatedAt string) map[string][]byte {
+// QualitativeKeys are the keys of the DSA qualitative answers file, in
+// table order.
+var QualitativeKeys = []string{"own_initiative", "automated_means", "training", "other"}
+
+// DSAFiles renders the DSA Art. 15 CSV set. qual holds the qualitative
+// answers by QualitativeKeys (missing answers are left blank).
+func DSAFiles(x *Exact, cfg *config.Config, p Period, version int, generatedAt string, qual map[string]string) map[string][]byte {
 	svc := cfg.Provider.ServiceType
 	rp := p.Start + "/" + p.End
 	files := map[string][]byte{}
@@ -246,13 +252,13 @@ func DSAFiles(x *Exact, cfg *config.Config, p Period, version int, generatedAt s
 	files["tab5_own_initiative_illegal.csv"] = own(x.OwnLaw)
 	files["tab6_own_initiative_TC.csv"] = own(x.OwnTerms)
 
-	// Tab 11: qualitative skeleton.
+	// Tab 11: qualitative answers (config "dsa_qualitative").
 	files["tab11_qualitative.csv"] = writeCSV([][]string{
 		{"Applicability", "Service", "Reporting period", "Question", "Answer"},
-		{"All", svc, rp, "Summary of the content moderation engaged in at the provider's own initiative", ""},
-		{"All", svc, rp, "Use of automated means for content moderation: purposes, accuracy indicators, safeguards", ""},
-		{"All", svc, rp, "Training and assistance given to persons in charge of content moderation", ""},
-		{"All", svc, rp, "Restrictions applied (Art. 15(1)(c)) and other relevant information", ""},
+		{"All", svc, rp, "Summary of the content moderation engaged in at the provider's own initiative", qual["own_initiative"]},
+		{"All", svc, rp, "Use of automated means for content moderation: purposes, accuracy indicators, safeguards", qual["automated_means"]},
+		{"All", svc, rp, "Training and assistance given to persons in charge of content moderation", qual["training"]},
+		{"All", svc, rp, "Restrictions applied (Art. 15(1)(c)) and other relevant information", qual["other"]},
 	})
 	return files
 }

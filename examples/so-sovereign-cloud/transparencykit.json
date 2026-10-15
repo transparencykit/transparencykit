@@ -12,5 +12,6 @@
   "public": "file://./public",
   "public_base_url": "https://transparencykit.github.io/transparencykit/example",
   "signing_key": "transparencykit.key",
-  "min_count": 3
+  "min_count": 3,
+  "dsa_qualitative": "dsa-qualitative.json"
 }

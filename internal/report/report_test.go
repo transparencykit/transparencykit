@@ -181,7 +181,9 @@ func TestPublicReportBandingAndPrivacy(t *testing.T) {
 			t.Fatalf("CH row: %+v", row)
 		}
 	}
-	if r.Government.DisclosureRatePct == nil || *r.Government.DisclosureRatePct != 80 {
+	// rejected is banded (1-2) and the outcome cells sum to the exact total, so
+	// the rate is only known to lie between 8/10 and 9/10 (review S6).
+	if r.Government.DisclosureRatePct != "80.0–90.0" {
 		t.Fatalf("disclosure rate = %v", r.Government.DisclosureRatePct)
 	}
 	js, _ := JSON(r)
@@ -224,12 +226,15 @@ func TestDSAFilesExact(t *testing.T) {
 	cfg := testConfig(t)
 	p, _ := ParsePeriod("2026")
 	x := Aggregate(fixture(), p, cfg.Home())
-	files := DSAFiles(x, cfg, p, 1, "2027-01-10T00:00:00Z")
+	files := DSAFiles(x, cfg, p, 1, "2027-01-10T00:00:00Z", map[string]string{"training": "Annual training."})
 	for _, n := range []string{"tab1_identification.csv", "tab2_categories_names.csv", "tab3_member_state_orders.csv",
 		"tab4_notices.csv", "tab5_own_initiative_illegal.csv", "tab6_own_initiative_TC.csv", "tab11_qualitative.csv"} {
 		if _, ok := files[n]; !ok {
 			t.Fatalf("missing %s", n)
 		}
+	}
+	if t11 := readCSV(t, files["tab11_qualitative.csv"]); t11[3][4] != "Annual training." || t11[1][4] != "" {
+		t.Fatalf("tab11 answers: %v", t11)
 	}
 	t3 := readCSV(t, files["tab3_member_state_orders.csv"])
 	if len(t3[0]) != 6+7+7 {

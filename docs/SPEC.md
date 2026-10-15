@@ -244,9 +244,16 @@ original entry stays in the ledger.
   "public_base_url": "https://example-transparency.sos-ch-gva-2.exo.io",
   "signing_key": "transparencykit.key",
   "min_count": 3,
+  "derivable_counts": "withhold",
+  "dsa_qualitative": "dsa-qualitative.json",
   "ledger_retention": { "mode": "GOVERNANCE", "days": 3650 }
 }
 ```
+
+`derivable_counts` (`withhold`, the default, or `publish`) controls breakdowns whose banded cells
+could be calculated (§7.2). `dsa_qualitative` names a JSON file with the DSA qualitative answers,
+keys `own_initiative`, `automated_means`, `training` and `other`; they fill
+`dsa/tab11_qualitative.csv`.
 
 Store URL schemes:
 
@@ -256,21 +263,34 @@ Store URL schemes:
 | `sos://` | `sos://bucket/prefix?zone=ch-gva-2` | Endpoint `https://sos-<zone>.exo.io`, region `<zone>`, path-style. |
 | `s3://` | `s3://bucket/prefix?endpoint=https://…&region=…` | Any S3-compatible store. |
 
-Credentials are read from `EXOSCALE_API_KEY` / `EXOSCALE_API_SECRET`, falling back to
-`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`. They are never read from the config file.
+Credentials are never read from the config file. Each store looks up, in order:
+
+1. a per-store pair: `TRANSPARENCYKIT_LEDGER_ACCESS_KEY` / `TRANSPARENCYKIT_LEDGER_SECRET_KEY` for
+   the ledger, `TRANSPARENCYKIT_PUBLIC_ACCESS_KEY` / `TRANSPARENCYKIT_PUBLIC_SECRET_KEY` for the
+   public store;
+2. `EXOSCALE_API_KEY` / `EXOSCALE_API_SECRET`;
+3. `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
+
+One `publish` run therefore can use two bucket-scoped keys. Local `file://` stores create the
+ledger with mode 0700/0600 and public files with 0755/0644, and refuse to read or write through
+symbolic links.
 
 ---
 
 ## 7. Publication
 
-`transparencykit publish --period 2026 | 2026-H1 | 2026-H2 | 2026-01-01..2026-03-31`
+`transparencykit publish --period 2026 | 2026-H1 | 2026-H2 | 2026-01-01..2026-03-31 [--as-of date]`
 
 ### 7.1 Aggregation rules
 
 - An entry is in the period when its `received_at` / `effective` falls in it (inclusive dates, UTC).
 - Amendments are applied, then retractions.
-- State-like types (`subprocessor_change`, `infrastructure`, `measures`) are folded up to the
-  period end. Changes within the period are listed separately.
+- Counts cover the whole period. State-like types (`subprocessor_change`, `infrastructure`,
+  `measures`) are folded up to the **as-of date**: the earlier of the publication date and the
+  period end, or `--as-of`. A full-year report published in October therefore shows the
+  subprocessors in force in October; changes recorded with a later effective date are listed as
+  `upcoming` (announced) and appear in the Atom feed. `period.as_of` in `report.json` and `as_of` in
+  the Data Act and subprocessor files record the date used.
 - Medians use the lower median for even counts and are expressed in hours with 1 decimal. Pairs
   missing an end timestamp are excluded and counted as `pending`.
 
@@ -279,9 +299,28 @@ Credentials are read from `EXOSCALE_API_KEY` / `EXOSCALE_API_SECRET`, falling ba
 In `index.html` and `report.json`, a **breakdown cell** whose count *c* satisfies
 `0 < c < min_count` is published as the string `"1-<min_count-1>"`. Zero is always published
 exactly, so explicit "0 third-country disclosures" claims stay possible. Overall totals are exact.
-Residual risk: subtracting other cells from a total can reveal a single banded cell. Choose
-`min_count` and the breakdown granularity accordingly. **DSA CSVs are never banded**, because the
-DSA requires exact figures.
+
+Banding alone does not hide a count that can be calculated from other published numbers.
+`publish` therefore applies these rules:
+
+- **Breakdowns that add up to an exact total.** If a single cell is banded, total minus the other
+  cells gives its value. With several banded cells, their sum is known and each lies in
+  `[1, min_count-1]`; a cell is determined when only one value fits. Such a breakdown is
+  withheld (published as `null`, listed in `report.json` `withheld` with the cells it would
+  reveal). With `"derivable_counts": "publish"` it is published and still listed, as a warning.
+- **Country rows.** A row shows its exact total, disclosed and rejected; other outcomes are not
+  shown. If the published cells leave no room for a banded value, the row's outcome cells are
+  replaced by `"withheld"`.
+- **Disclosure rate.** The rate is computed over every assignment of the banded outcome cells
+  consistent with the published total. One possible value is published as a number (it reveals
+  nothing new); otherwise the range `"lo–hi"` is published. No rate is published when the outcome
+  breakdown is withheld.
+- **Medians** over fewer than `min_count` observations are omitted.
+
+Residual risk: cross-table inference (combining, say, the country table with the authority-type
+breakdown, or a report with an earlier version or another period) is not checked. Choose
+`min_count` and the breakdown granularity accordingly, and review the `withheld` list of a draft
+(§7.5). **DSA CSVs are never banded**, because the DSA requires exact figures.
 
 ### 7.3 Output layout (public store)
 
@@ -292,23 +331,36 @@ index.html                          list of all published reports (convenience)
 reports/<label>/v<N>/
     index.html                      human-readable report
     report.json                     schema transparencykit/report/v1
-    data-act-art28.html|json        as of period end
-    subprocessors.json              current list as of period end
-    subprocessors.atom              full change history up to period end
+    data-act-art28.html|json        as of the as-of date (§7.1)
+    subprocessors.json              current list as of the as-of date, history, upcoming
+    subprocessors.atom              change history including announced changes
     dsa/tab1_identification.csv … tab11_qualitative.csv
     manifest.json                   signed manifest
     manifest.sig                    base64(Ed25519(manifest.json bytes))
-latest/…                            copy of the most recent version (stable URLs for contracts)
+latest/…                            byte-identical copy of the publication latest.json names
 ```
 
 `latest.json` holds `label`, `version`, `manifest`, `manifest_sha256` and `period_end` for the
 publication with the latest period end. It also holds `chain_head` (`{path, sha256}`), the most
 recently published manifest of any period. Publishing an older period (e.g. a correction to 2025)
-extends the chain but does not move `latest/`. Before linking, `publish` re-hashes the chain-head
-manifest and refuses to continue if it doesn't match `latest.json`.
+extends the chain but does not move `latest/`.
+
+Before linking, `publish` walks the chain from `chain_head`, re-hashing every manifest, and lists
+all signed version folders (`manifest.sig` present):
+
+- A signed publication outside the chain whose `previous` is the current head and whose signature
+  verifies with the signing key was published after `latest.json` was last written (an
+  interrupted run, or an older `latest.json` put back). It is linked back in as the new head,
+  repeatedly, so the next publication continues the real history.
+- Any other signed publication outside the chain makes `publish` refuse: publishing would fork
+  history. The operator restores `latest.json` (OPERATIONS.md).
 
 Versions are immutable: republishing a period creates `v<N+1>`. This satisfies the DSA rule
-that report versions be explicitly marked.
+that report versions be explicitly marked. Files are uploaded first, then `manifest.json`, then
+`manifest.sig`. A folder without `manifest.sig` is an **abandoned** upload: the next run takes the
+next free version number for the label (folders without a signature count as used), logs the
+abandoned folder and leaves it in place; the root index lists only signed versions. Abandoned
+folders are safe to delete from the public bucket.
 
 ### 7.4 Manifest
 
@@ -316,7 +368,7 @@ that report versions be explicitly marked.
 {
   "schema": "transparencykit/manifest/v1",
   "provider": "Example Cloud SA",
-  "label": "2026", "version": 1,
+  "label": "2026", "version": 1, "sequence": 7,
   "period": { "start": "2026-01-01", "end": "2026-12-31" },
   "generated_at": "2027-02-10T09:00:00Z",
   "ledger": { "seq": 1234, "hash": "sha256:…" },
@@ -326,24 +378,51 @@ that report versions be explicitly marked.
 }
 ```
 
-`previous` links to `latest.json`'s `chain_head` from before this publication, which forms a hash
-chain over all publications in publication order.
+`previous` links to the chain head from before this publication, which forms a hash chain over
+all publications in publication order. `sequence` numbers publications 1, 2, 3… in that order, so
+publication *n* must be the *n*-th from the start of the history it links to.
+
+### 7.5 Drafts and review
+
+`publish --period P --draft dir` renders every file into a local directory together with
+`draft.json` (label, version, sequence, as-of date, generation time, ledger head, previous link,
+key id, file hashes). Nothing is signed or uploaded. Reviewers read `index.html`, check the
+`withheld` list and may edit the **Answer** column of `dsa/tab11_qualitative.csv` (the only
+editable file; questions, rows and headers must stay unchanged).
+
+`publish --from-draft dir` re-renders from the ledger state recorded in the draft, even if records
+were appended since, compares every file byte for byte with the draft (except the answers), and
+then signs and uploads. It refuses when the public store has moved on (another publication since
+the draft) or the key differs; make a new draft in that case.
 
 ---
 
 ## 8. Public verification (`transparencykit verify`)
 
-`transparencykit verify --pubkey transparencykit.pub <base-url | store-url> [reports/<label>/v<N>]`
+`transparencykit verify --pubkey key.pub [--pubkey old.pub] [--chain] [--checkpoint file] <base-url | store-url> [reports/<label>/v<N>]`
 
-1. Resolve the target via `latest.json` if no path is given.
-2. Fetch `manifest.json` and `manifest.sig`, and verify the Ed25519 signature with the
-   **out-of-band** public key. The key served next to the reports is only a convenience, and
-   using it emits a warning.
+1. Without a path, read `latest.json` and verify the publication it names, requiring its manifest
+   hash to match `manifest_sha256`. Then verify `latest/manifest.json` and every `latest/` file
+   against the same manifest bytes, so the stable URLs readers open are covered.
+2. For each manifest: fetch `manifest.json` and `manifest.sig`, pick the trusted key whose key id
+   matches `key_id`, and verify the Ed25519 signature. Keys are given with `--pubkey` (repeatable,
+   and one file may hold several PEM blocks) and must come **out-of-band**. The key served next to
+   the reports is only a convenience, and using it emits a warning.
 3. Fetch every listed file and compare SHA-256 and size.
-4. With `--chain`, follow `previous` links to the first publication, verifying each manifest's
-   signature and its SHA-256 against the link.
+4. With `--chain`, start at `chain_head` (the newest publication of any period, including
+   back-filled ones), follow `previous` links to the first publication, verify each manifest and
+   its SHA-256 against the link, check that every `sequence` matches its position, and check that
+   the displayed publication is part of that history.
+5. With `--checkpoint file` (implies `--chain`), every publication recorded in the file by earlier
+   runs must still be in the history with the same hash; the publications seen now are added.
 
 Exit code 0 = verified; 1 = verification failure; 2 = usage or I/O error.
+
+**Limits.** Everything a verifier fetches comes from the provider. Without a checkpoint, a
+provider (or an attacker with the signing key and write access) can present a different but
+self-consistent history to a new verifier. Checkpoints detect a rewrite only for verifiers that
+saw the earlier state. Detecting split views across verifiers needs external witnesses or a public
+transparency log (roadmap).
 
 ---
 
@@ -352,14 +431,16 @@ Exit code 0 = verified; 1 = verification failure; 2 = usage or I/O error.
 | Command | Purpose |
 |---|---|
 | `transparencykit init` | Write a `transparencykit.json` template, generate a key pair, and print bucket setup commands. |
-| `transparencykit keygen --out transparencykit.key` | Ed25519 key pair (PKCS#8 / PKIX PEM, OpenSSL-compatible). |
+| `transparencykit keygen --out transparencykit.key` | Ed25519 key pair (PKCS#8 / PKIX PEM, OpenSSL-compatible). Refuses an `--out` ending in `.pub` and never overwrites. |
 | `transparencykit record template <type>` | Print a JSON skeleton. |
 | `transparencykit record add <type> [-f file\|-] [--amends N] [--by who]` | Validate and append. |
-| `transparencykit record import -f records.json` | Bulk append a JSON array of `{type, body, amends?, by?}`. Every item is validated before any write. |
+| `transparencykit record validate <type> [-f file\|-] [--amends N]` | Validate a record, including its references, without appending. |
+| `transparencykit record import -f records.json [--from N] [--check]` | Bulk append a JSON array of `{type, body, amends?, by?}`. Every item, including amendment and retraction references to existing records or earlier items, is validated before any write. `--from N` resumes after an interrupted import. |
 | `transparencykit record retract <seq> --reason …` | Append a retraction. |
-| `transparencykit record list [--type t] [--json]` / `record show <seq>` | Inspect (private fields shown — operator only). |
+| `transparencykit record list [--type t] [--effective] [--json]` / `record show <seq>` | Inspect (private fields shown, operator only). `--effective` shows one row per record with amendments applied and retractions marked. |
 | `transparencykit ledger verify [--expect-head h]` | Full chain verification. |
-| `transparencykit publish --period P [--out dir] [--dry-run]` | Aggregate, render, sign, upload. |
+| `transparencykit publish --period P [--as-of date] [--out dir] [--dry-run]` | Aggregate, render, sign, upload. |
+| `transparencykit publish --period P --draft dir` / `--from-draft dir` | Review workflow (§7.5). |
 | `transparencykit verify …` | Public verification (§8). |
 | `transparencykit serve [--addr :8080]` | Read-only HTTP server for the public store. |
 | `transparencykit version` | |
@@ -371,10 +452,12 @@ Exit code 0 = verified; 1 = verification failure; 2 = usage or I/O error.
 | Threat | Mitigation |
 |---|---|
 | Operator silently edits or deletes a past record | Hash chain plus object lock (governance/compliance); `ledger verify`. |
-| Operator republishes an altered past report | Immutable versions; manifest hash chain; third parties keep copies of earlier manifests. |
-| Attacker replaces public files | Signature check against the out-of-band key. |
-| Key compromise | Key rotation: a new key is announced in a manifest signed by the old key (v0.2); keep the key offline or in CI secrets. |
-| Re-identification from small counts | `min_count` banding; private fields never rendered. |
+| Operator republishes an altered past report | Immutable versions; manifest hash chain with sequence numbers; verifier checkpoints (§8). |
+| Old `latest.json` put back to fork history | `publish` links stray signed publications back or refuses (§7.3); checkpoints. |
+| Attacker replaces public files, including `latest/` | Signature check against the out-of-band key; default verify covers `latest/`. |
+| Key compromise | Rotate (OPERATIONS.md); verifiers pass old and new keys. Authenticated rotation (new key announced in a manifest signed by the old one) is on the roadmap. |
+| Re-identification from small counts | `min_count` banding; derivable breakdowns withheld; rates as ranges; small medians omitted (§7.2); private fields never rendered. |
+| Local users reading the ledger | `file://` ledger created 0700/0600; symlinks refused. |
 | Supply chain | Zero third-party dependencies; reproducible `CGO_ENABLED=0 -trimpath` builds. |
 
 Out of scope: a provider that never records a request in the first place. TransparencyKit makes
@@ -385,7 +468,7 @@ external auditors address this partially.
 
 ## 11. Roadmap
 
-- **v0.2:** `ledger verify --versions`; key rotation; `canary.json`; XLSX export; official-template validation.
+- **v0.2:** `ledger verify --versions`; authenticated key rotation; `canary.json`; XLSX export; official-template validation.
 - **v0.3:** publish manifest checksums to a public transparency log (Sigsum or Tessera with C2SP witnesses).
 - **v0.4:** importers (ticketing CSV, Lumen export); multi-signer approval (two-person rule).
 
@@ -396,7 +479,9 @@ external auditors address this partially.
 1. A tampered, deleted or reordered ledger entry makes `ledger verify` exit non-zero, naming the seq.
 2. `publish` output passes `verify` over HTTP. Modifying any published byte makes it fail.
 3. Republishing a period creates `v2`, whose manifest links `v1` by hash; `verify --chain` passes.
-4. Counts 1..`min_count`−1 never appear in HTML/JSON breakdowns; zeros do appear; DSA CSVs are exact.
+   A tampered `latest/` file or a corrupted back-filled publication fails the default check.
+4. Counts 1..`min_count`−1 never appear in HTML/JSON breakdowns and cannot be calculated from a
+   breakdown and its total (§7.2); zeros do appear; DSA CSVs are exact.
 5. `private` fields never appear in any published file.
 6. The S3 client signs requests correctly (AWS SigV4 reference vectors) and works against an S3-compatible endpoint, including pagination and `If-None-Match` conflicts.
 7. `CGO_ENABLED=0 go build` produces a static binary with no third-party modules in `go.mod`.

@@ -43,9 +43,20 @@ type Store interface {
 	String() string
 }
 
+// Roles select per-store credentials (see Credentials).
+const (
+	RoleLedger = "LEDGER"
+	RolePublic = "PUBLIC"
+)
+
 // Open parses a store URL: file://path, sos://bucket/prefix?zone=…,
-// s3://bucket/prefix?endpoint=…&region=….
-func Open(raw string) (Store, error) {
+// s3://bucket/prefix?endpoint=…&region=…, using the default credentials.
+func Open(raw string) (Store, error) { return OpenRole(raw, "") }
+
+// OpenRole is Open with role-specific credentials: for role "LEDGER" it first
+// tries TRANSPARENCYKIT_LEDGER_ACCESS_KEY / TRANSPARENCYKIT_LEDGER_SECRET_KEY,
+// for "PUBLIC" the TRANSPARENCYKIT_PUBLIC_* pair, then the default variables.
+func OpenRole(raw, role string) (Store, error) {
 	u, err := url.Parse(raw)
 	if err != nil {
 		return nil, fmt.Errorf("store url %q: %w", raw, err)
@@ -88,13 +99,19 @@ func Open(raw string) (Store, error) {
 		if ep := q.Get("endpoint"); ep != "" {
 			cfg.Endpoint = ep // explicit override (tests, private endpoints)
 		}
-		cfg.AccessKey, cfg.SecretKey = credentials()
+		cfg.AccessKey, cfg.SecretKey = Credentials(role)
 		return NewS3(cfg)
 	}
 	return nil, fmt.Errorf("store url %q: unsupported scheme (use file://, sos:// or s3://)", raw)
 }
 
-func credentials() (string, string) {
+// Credentials returns the access key pair for a role (see OpenRole).
+func Credentials(role string) (string, string) {
+	if role != "" {
+		if k := os.Getenv("TRANSPARENCYKIT_" + role + "_ACCESS_KEY"); k != "" {
+			return k, os.Getenv("TRANSPARENCYKIT_" + role + "_SECRET_KEY")
+		}
+	}
 	if k := os.Getenv("EXOSCALE_API_KEY"); k != "" {
 		return k, os.Getenv("EXOSCALE_API_SECRET")
 	}

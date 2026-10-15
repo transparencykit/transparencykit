@@ -1,0 +1,6 @@
+{
+  "own_initiative": "So Sovereign Cloud does not monitor customer content. Own-initiative measures are limited to abuse detected on our network (spam relays, phishing kits, open resolvers) and to acceptable-use violations reported by our security team.",
+  "automated_means": "Automated systems flag network abuse (outbound spam volume, known phishing URLs). A person reviews every flag before any action on a customer account; no decision is taken solely by automated means.",
+  "training": "Abuse desk staff complete onboarding training on the DSA, Swiss and EU data-protection law and our escalation procedure, with a yearly refresher.",
+  "other": "Fictional example data for TransparencyKit. No restrictions under Art. 15(1)(c) beyond those listed in the notices table."
+}

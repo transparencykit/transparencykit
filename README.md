@@ -48,7 +48,7 @@ records) and serves it. The same example is published, signed, at
 ## On Exoscale SOS
 
 ```sh
-export EXOSCALE_API_KEY=EXO… EXOSCALE_API_SECRET=…      # bucket-scoped IAM key recommended
+export EXOSCALE_API_KEY=EXO… EXOSCALE_API_SECRET=…      # admin key, for bucket setup only
 mc alias set sos https://sos-ch-gva-2.exo.io "$EXOSCALE_API_KEY" "$EXOSCALE_API_SECRET"
 mc mb --with-lock sos/acme-transparencykit-ledger              # object lock: only at creation time
 mc retention set --default GOVERNANCE 3650d sos/acme-transparencykit-ledger
@@ -60,6 +60,9 @@ mc mb sos/acme-transparency
 "public": "sos://acme-transparency/?zone=ch-gva-2",
 "public_base_url": "https://acme-transparency.sos-ch-gva-2.exo.io"
 ```
+
+Then run `publish` with one key per bucket: `TRANSPARENCYKIT_LEDGER_ACCESS_KEY` /
+`_SECRET_KEY` and `TRANSPARENCYKIT_PUBLIC_ACCESS_KEY` / `_SECRET_KEY`.
 
 Object lock can only be enabled when the bucket is created. The full list of prerequisites
 (object lock, retention, ACLs, conditional writes, API keys) is in
@@ -75,10 +78,10 @@ The binary is `transparencykit`; `tkit` is the same program under a short name.
 | Command | |
 |---|---|
 | `init`, `keygen` | Config template, Ed25519 key pair (OpenSSL-compatible PEM) |
-| `record template/add/import/retract/list/show` | Write and inspect the ledger (amendments via `--amends N`) |
+| `record template/validate/add/import/retract/list/show` | Write and inspect the ledger (amendments via `--amends N`; `list --effective`) |
 | `ledger verify [--expect-head h]` | Full chain check; prove a manifest's ledger head is in the chain |
-| `publish --period 2026\|2026-H1\|2026-Q3\|A..B` | Aggregate, render, sign, upload (immutable `v<N>` + `latest/`) |
-| `verify --pubkey k.pub <url> [path] [--chain]` | Check signatures, file hashes and the manifest chain |
+| `publish --period 2026\|2026-H1\|2026-Q3\|A..B` | Aggregate, render, sign, upload (immutable `v<N>` + `latest/`); `--draft dir` / `--from-draft dir` for review |
+| `verify --pubkey k.pub <url> [path] [--chain] [--checkpoint f]` | Check signatures, file hashes, `latest/` copies and the whole publication history |
 | `serve` | Read-only HTTP server for the public store |
 
 Exit codes: `0` OK, `1` verification failure, `2` usage or I/O error.
@@ -92,8 +95,9 @@ Exit codes: `0` OK, `1` verification failure, `2` usage or I/O error.
 - **Private stays private.** `private.case_ref`/`notes` never reach a published file. A test
   enforces this.
 - **Banding.** Breakdown counts 1..`min_count`−1 are published as ranges. Zeros are exact, so
-  "0 third-country disclosures" is a checkable statement. DSA CSVs are exact because the law
-  requires it.
+  "0 third-country disclosures" is a checkable statement. A breakdown whose ranges could be
+  resolved by subtracting from its total is withheld, and the disclosure rate becomes a range
+  when an exact figure would reveal small counts. DSA CSVs are exact because the law requires it.
 
 ## Development
 

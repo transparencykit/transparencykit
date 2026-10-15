@@ -95,6 +95,22 @@ record and `ledger verify` reports the break.
   `https://acme-transparency.sos-ch-gva-2.exo.io/latest/index.html`, put a CDN in front, or run
   `tkit serve`. Folder URLs ending in `/` do not resolve to `index.html` on plain object storage.
 
+## API keys
+
+Use one IAM key per bucket. `publish` needs both at once (it reads the ledger and writes the
+reports), so each store reads its own variables:
+
+| Store | Access key | Secret |
+|---|---|---|
+| Ledger | `TRANSPARENCYKIT_LEDGER_ACCESS_KEY` | `TRANSPARENCYKIT_LEDGER_SECRET_KEY` |
+| Reports | `TRANSPARENCYKIT_PUBLIC_ACCESS_KEY` | `TRANSPARENCYKIT_PUBLIC_SECRET_KEY` |
+
+A store without its own pair uses `EXOSCALE_API_KEY` / `EXOSCALE_API_SECRET`, then
+`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`. Keys are never read from `transparencykit.json`.
+
+Interrupted uploads can leave a report folder without `manifest.sig`. The next `publish` skips it
+and logs it; the reports key may delete it, but nothing requires that.
+
 ## Costs on Exoscale SOS
 
 Every record is one small object. SOS bills each object as at least 128 KB, so 1,000 records
@@ -108,7 +124,9 @@ and only if you turn on versioning there and publish more than 1,000 times.
 
 1. Ledger bucket created **with object lock**, default retention set, no lifecycle rules.
 2. Reports bucket created without lock; objects publicly readable.
-3. Two API keys, each restricted to one bucket, neither allowed to delete.
+3. Two API keys, each restricted to one bucket, neither allowed to delete, exported as
+   `TRANSPARENCYKIT_LEDGER_ACCESS_KEY` / `_SECRET_KEY` and `TRANSPARENCYKIT_PUBLIC_ACCESS_KEY` /
+   `_SECRET_KEY` (see [API keys](#api-keys)).
 4. `ledger` and `public` URLs set in `transparencykit.json`, for example
    `sos://acme-transparency-ledger/?zone=ch-gva-2`.
 5. `tkit record add …` then `tkit ledger verify` succeeds.
