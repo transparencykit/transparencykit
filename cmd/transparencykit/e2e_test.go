@@ -188,6 +188,9 @@ func TestE2ELocal(t *testing.T) {
 }
 
 func TestE2ES3(t *testing.T) {
+	// The test process itself opens the store for the HTTP handler below.
+	t.Setenv("EXOSCALE_API_KEY", "EXOtestkey")
+	t.Setenv("EXOSCALE_API_SECRET", "testsecret")
 	srv := s3fake.New()
 	defer srv.Close()
 	srv.PageSize = 3
