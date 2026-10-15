@@ -1,0 +1,6 @@
+dist/
+demo/
+*.key
+vitrine.json
+ledger/
+public/

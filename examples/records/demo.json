@@ -1,0 +1,1814 @@
+[
+ {
+  "type": "infrastructure",
+  "body": {
+   "effective": "2025-01-01",
+   "zone": "ch-gva-2",
+   "country": "CH",
+   "city": "Geneva",
+   "operator": "Example DC Geneva SA",
+   "operator_country": "CH",
+   "legal_entity": "Example Cloud SA",
+   "legal_entity_country": "CH",
+   "services": [
+    "compute",
+    "object-storage",
+    "kubernetes"
+   ],
+   "status": "active"
+  }
+ },
+ {
+  "type": "infrastructure",
+  "body": {
+   "effective": "2025-01-01",
+   "zone": "ch-zrh-1",
+   "country": "CH",
+   "city": "Zurich",
+   "operator": "Example DC Zurich AG",
+   "operator_country": "CH",
+   "legal_entity": "Example Cloud SA",
+   "legal_entity_country": "CH",
+   "services": [
+    "compute",
+    "object-storage"
+   ],
+   "status": "active"
+  }
+ },
+ {
+  "type": "infrastructure",
+  "body": {
+   "effective": "2025-06-01",
+   "zone": "de-fra-1",
+   "country": "DE",
+   "city": "Frankfurt",
+   "operator": "Example Colo GmbH",
+   "operator_country": "DE",
+   "legal_entity": "Example Cloud SA",
+   "legal_entity_country": "CH",
+   "services": [
+    "compute",
+    "object-storage"
+   ],
+   "status": "active"
+  }
+ },
+ {
+  "type": "measures",
+  "body": {
+   "effective": "2026-01-01",
+   "statement": "Customer data is stored and processed only in the zone the customer selects. No group company or subprocessor subject to third-country disclosure laws has access to customer data.",
+   "technical": [
+    "Encryption at rest for block and object storage, keys held in-zone",
+    "Customer-provided keys (SSE-C) for object storage",
+    "Administrative access via in-zone bastions with hardware-key MFA and session logging"
+   ],
+   "organisational": [
+    "Every authority request is reviewed by Legal; requests without a valid basis under Swiss or EU law are rejected",
+    "Staff with production access are employed by EU/Swiss entities",
+    "Annual external audit of access controls"
+   ],
+   "contractual": [
+    "DPA commits to challenge, minimise and notify on third-country requests (Data Act Art. 32)",
+    "Subprocessors bound by equivalent obligations and 30-day change notice"
+   ]
+  }
+ },
+ {
+  "type": "subprocessor_change",
+  "body": {
+   "effective": "2025-03-01",
+   "change": "add",
+   "name": "Example Mail AG",
+   "purpose": "Transactional e-mail",
+   "locations": [
+    "CH"
+   ],
+   "services": [
+    "portal"
+   ],
+   "notice_given": "2025-02-01"
+  }
+ },
+ {
+  "type": "subprocessor_change",
+  "body": {
+   "effective": "2025-09-01",
+   "change": "add",
+   "name": "Example Support GmbH",
+   "purpose": "Second-level support (no data access by default)",
+   "locations": [
+    "DE"
+   ],
+   "services": [
+    "support"
+   ],
+   "notice_given": "2025-08-01"
+  }
+ },
+ {
+  "type": "subprocessor_change",
+  "body": {
+   "effective": "2026-05-01",
+   "change": "update",
+   "name": "Example Mail AG",
+   "purpose": "Transactional e-mail and SMS",
+   "locations": [
+    "CH",
+    "AT"
+   ],
+   "services": [
+    "portal"
+   ],
+   "notice_given": "2026-04-01"
+  }
+ },
+ {
+  "type": "subprocessor_change",
+  "body": {
+   "effective": "2026-10-01",
+   "change": "add",
+   "name": "Example Payments SA",
+   "purpose": "Card payment processing",
+   "locations": [
+    "CH"
+   ],
+   "services": [
+    "billing"
+   ],
+   "notice_given": "2026-09-01"
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-06-05T13:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "no_data",
+   "acknowledged_at": "2026-06-05T14:00:00Z",
+   "completed_at": "2026-06-06T13:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-001"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-09-04T12:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 3,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-09-04T13:00:00Z",
+   "completed_at": "2026-09-05T12:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-002"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-04-02T08:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-04-02T09:00:00Z",
+   "completed_at": "2026-04-03T08:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-003"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-04-03T15:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 3,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-04-03T16:00:00Z",
+   "completed_at": "2026-04-04T15:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-004"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-02-08T16:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-02-08T17:00:00Z",
+   "completed_at": "2026-02-09T16:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-005"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-04-02T15:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-04-02T16:00:00Z",
+   "completed_at": "2026-04-03T15:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-006"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-03-18T08:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 3,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-03-18T09:00:00Z",
+   "completed_at": "2026-03-19T08:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-007"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-03-04T16:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-03-04T17:00:00Z",
+   "completed_at": "2026-03-05T16:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-008"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-02-18T08:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 3,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-02-18T09:00:00Z",
+   "completed_at": "2026-02-19T08:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-009"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-04-16T15:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-04-16T16:00:00Z",
+   "completed_at": "2026-04-17T15:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-010"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-08-12T11:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 3,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-08-12T12:00:00Z",
+   "completed_at": "2026-08-13T11:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-011"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-04-03T16:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "disclosed_full",
+   "acknowledged_at": "2026-04-03T17:00:00Z",
+   "completed_at": "2026-04-04T16:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-012"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-08-10T16:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 3,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-08-10T17:00:00Z",
+   "completed_at": "2026-08-11T16:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-013"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-07-06T12:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "law_enforcement",
+   "legal_basis": "CH StPO Art. 265",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-07-06T13:00:00Z",
+   "completed_at": "2026-07-07T12:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-014"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-01-22T08:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "court",
+   "legal_basis": "CH B\u00dcPF",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-01-22T09:00:00Z",
+   "completed_at": "2026-01-23T08:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-015"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-06-20T14:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "court",
+   "legal_basis": "CH B\u00dcPF",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-06-20T15:00:00Z",
+   "completed_at": "2026-06-21T14:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-016"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-02-09T14:00:00Z",
+   "authority_country": "CH",
+   "authority_type": "court",
+   "legal_basis": "CH B\u00dcPF",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "withdrawn",
+   "acknowledged_at": "2026-02-09T15:00:00Z",
+   "completed_at": "2026-02-10T14:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-017"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-05-21T16:00:00Z",
+   "authority_country": "DE",
+   "authority_type": "law_enforcement",
+   "legal_basis": "DE StPO \u00a7 100j",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "no_data",
+   "acknowledged_at": "2026-05-21T17:00:00Z",
+   "completed_at": "2026-05-22T16:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-018"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-07-22T12:00:00Z",
+   "authority_country": "DE",
+   "authority_type": "law_enforcement",
+   "legal_basis": "DE StPO \u00a7 100j",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-07-22T13:00:00Z",
+   "completed_at": "2026-07-23T12:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-019"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-03-20T08:00:00Z",
+   "authority_country": "DE",
+   "authority_type": "law_enforcement",
+   "legal_basis": "DE StPO \u00a7 100j",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-03-20T09:00:00Z",
+   "completed_at": "2026-03-21T08:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-020"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-05-05T10:00:00Z",
+   "authority_country": "DE",
+   "authority_type": "law_enforcement",
+   "legal_basis": "DE StPO \u00a7 100j",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-05-05T11:00:00Z",
+   "completed_at": "2026-05-06T10:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-021"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-02-06T14:00:00Z",
+   "authority_country": "FR",
+   "authority_type": "law_enforcement",
+   "legal_basis": "FR CPP art. 60-1",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-02-06T15:00:00Z",
+   "completed_at": "2026-02-07T14:00:00Z",
+   "customer_notification": "not_applicable",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-022"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-07-18T11:00:00Z",
+   "authority_country": "FR",
+   "authority_type": "law_enforcement",
+   "legal_basis": "FR CPP art. 60-1",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "withdrawn",
+   "acknowledged_at": "2026-07-18T12:00:00Z",
+   "completed_at": "2026-07-19T11:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-023"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-07-08T09:00:00Z",
+   "authority_country": "FR",
+   "authority_type": "law_enforcement",
+   "legal_basis": "FR CPP art. 60-1",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-07-08T10:00:00Z",
+   "completed_at": "2026-07-09T09:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-024"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-04-22T10:00:00Z",
+   "authority_country": "AT",
+   "authority_type": "law_enforcement",
+   "legal_basis": "AT StPO \u00a7 76a",
+   "kind": "user_data",
+   "data_category": "content",
+   "accounts": 3,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-04-22T11:00:00Z",
+   "completed_at": "2026-04-23T10:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-025"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-03-09T11:00:00Z",
+   "authority_country": "AT",
+   "authority_type": "law_enforcement",
+   "legal_basis": "AT StPO \u00a7 76a",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 2,
+   "items": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-03-09T12:00:00Z",
+   "completed_at": "2026-03-10T11:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-026"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-09-12T16:00:00Z",
+   "authority_country": "US",
+   "authority_type": "law_enforcement",
+   "legal_basis": "US 18 U.S.C. \u00a7 2713 (CLOUD Act)",
+   "kind": "user_data",
+   "data_category": "non_content",
+   "accounts": 1,
+   "items": 1,
+   "outcome": "rejected",
+   "acknowledged_at": "2026-09-12T17:00:00Z",
+   "completed_at": "2026-09-13T16:00:00Z",
+   "customer_notification": "notified_before",
+   "service": "compute",
+   "zone": "ch-gva-2",
+   "private": {
+    "case_ref": "LEG-2026-027"
+   }
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-04-03T09:00:00Z",
+   "authority_country": "DE",
+   "authority_type": "regulator",
+   "legal_basis": "DSA Art. 9",
+   "kind": "content_action",
+   "dsa_order": "art9",
+   "illegal_content_category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "items": 3,
+   "outcome": "actioned",
+   "acknowledged_at": "2026-04-03T10:00:00Z",
+   "completed_at": "2026-04-03T21:00:00Z",
+   "customer_notification": "notified_after"
+  }
+ },
+ {
+  "type": "gov_request",
+  "body": {
+   "received_at": "2026-07-14T08:00:00Z",
+   "authority_country": "FR",
+   "authority_type": "law_enforcement",
+   "legal_basis": "DSA Art. 10",
+   "kind": "user_data",
+   "dsa_order": "art10",
+   "data_category": "non_content",
+   "accounts": 1,
+   "outcome": "disclosed_partial",
+   "acknowledged_at": "2026-07-14T09:00:00Z",
+   "completed_at": "2026-07-16T09:00:00Z",
+   "customer_notification": "notified_before"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-20T20:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+   "basis": "terms",
+   "action": "account_suspended",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-20T22:00:00Z",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-07-13T12:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-07-13T13:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-03T06:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-03T08:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-04T00:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+   "basis": "terms",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-01-04T03:00:00Z",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-03T06:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+   "basis": "terms",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-01-03T08:00:00Z",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-06-16T03:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "removed",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-06-16T05:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-10T02:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-10T05:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-16T05:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-05-16T08:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-06-05T17:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY",
+   "basis": "law",
+   "action": "account_suspended",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-06-05T19:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-02-23T08:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-02-23T10:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-18T17:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-18T20:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-26T07:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_PROTECTION_OF_MINORS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-26T08:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-16T11:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-16T13:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-07T19:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-05-07T21:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-02-08T03:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-02-08T05:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-16T19:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+   "basis": "terms",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-16T22:00:00Z",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-02-27T03:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-02-27T05:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-14T20:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-03-14T22:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-07-24T02:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-07-24T03:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-19T14:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "none",
+   "action": "none",
+   "items": 1,
+   "service": "compute",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-22T11:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "account_suspended",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-22T12:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-01T20:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-01-01T22:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-27T06:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-27T08:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-08T18:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "account_suspended",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-08T20:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-02T11:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+   "basis": "none",
+   "action": "none",
+   "items": 1,
+   "service": "compute"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-14T16:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-14T19:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-01T14:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-01T15:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-05T15:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+   "basis": "terms",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-03-05T17:00:00Z",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-17T17:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-17T20:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-08T06:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-01-08T09:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-18T00:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-18T03:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-20T16:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-20T18:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-18T15:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "account_suspended",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-18T17:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-07T14:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-07T16:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-11T02:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+   "basis": "terms",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-11T05:00:00Z",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-26T03:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-05-26T04:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-05T14:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_PROTECTION_OF_MINORS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-05-05T16:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-06T07:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-06T10:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-07-11T13:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-07-11T14:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-06-01T10:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "removed",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-06-01T13:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-13T10:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-01-13T13:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-02-04T07:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-02-04T09:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-25T05:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-01-25T07:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-13T04:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "none",
+   "action": "none",
+   "items": 1,
+   "service": "compute"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-23T10:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-23T13:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-14T02:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-03-14T04:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-02-20T07:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-02-20T09:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-11T17:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "none",
+   "action": "none",
+   "items": 1,
+   "service": "compute"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-02T16:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-03-02T18:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-06T06:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-01-06T09:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-10T14:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-10T16:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-06-26T00:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-06-26T01:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-18T06:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-18T08:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-02-22T20:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+   "basis": "law",
+   "action": "removed",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-02-22T23:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-07-17T09:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-07-17T10:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-13T11:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-03-13T12:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-14T05:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-05-14T08:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-20T07:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "removed",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-05-20T08:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-09T14:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-03-09T16:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-11T07:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-11T09:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-01T10:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "removed",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-03-01T12:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-21T06:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-21T07:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-27T02:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "none",
+   "action": "none",
+   "items": 1,
+   "service": "compute"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-01-13T00:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-01-13T01:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-25T04:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+   "basis": "none",
+   "action": "none",
+   "items": 1,
+   "service": "compute",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-07-25T10:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-07-25T13:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-03-02T16:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "account_suspended",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-03-02T17:00:00Z",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-25T16:00:00Z",
+   "source": "own_initiative",
+   "category": "STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY",
+   "basis": "none",
+   "action": "none",
+   "items": 1,
+   "service": "compute",
+   "automated_detection": true
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-03T00:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-03T01:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-07-27T14:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-07-27T17:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-22T07:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-22T09:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-02-24T16:00:00Z",
+   "source": "trusted_flagger",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "account_suspended",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-02-24T17:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-09T02:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-09T03:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-16T12:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-16T13:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-03T19:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-03T22:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-05-20T18:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "removed",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-05-20T19:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-08-09T03:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+   "basis": "law",
+   "action": "removed",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-08-09T05:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-09-10T14:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-09-10T17:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-04-10T02:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "forwarded_to_customer",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-04-10T04:00:00Z"
+  }
+ },
+ {
+  "type": "abuse_notice",
+  "body": {
+   "received_at": "2026-02-27T16:00:00Z",
+   "source": "art16_notice",
+   "category": "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+   "basis": "law",
+   "action": "disabled",
+   "items": 1,
+   "service": "compute",
+   "actioned_at": "2026-02-27T17:00:00Z"
+  }
+ }
+]

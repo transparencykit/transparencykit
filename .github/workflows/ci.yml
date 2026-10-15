@@ -1,0 +1,39 @@
+name: ci
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+      - name: gofmt
+        run: test -z "$(gofmt -l .)"
+      - name: vet
+        run: go vet ./...
+      - name: no third-party modules
+        run: test "$(go list -m all | wc -l)" -eq 1
+      - name: test
+        run: go test -race -count=1 ./...
+      - name: release build
+        run: tools/release.sh ci
+  sos:
+    # Live test against Exoscale SOS; runs only when secrets are configured.
+    if: ${{ vars.VITRINE_SOS_TEST_BUCKET != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+      - run: go test -count=1 -run SOS -v ./internal/store
+        env:
+          VITRINE_SOS_TEST_BUCKET: ${{ vars.VITRINE_SOS_TEST_BUCKET }}
+          VITRINE_SOS_TEST_ZONE: ${{ vars.VITRINE_SOS_TEST_ZONE }}
+          EXOSCALE_API_KEY: ${{ secrets.EXOSCALE_API_KEY }}
+          EXOSCALE_API_SECRET: ${{ secrets.EXOSCALE_API_SECRET }}
