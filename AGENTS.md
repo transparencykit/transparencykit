@@ -9,6 +9,8 @@ DSA Art. 15 CSVs, subprocessor feed. The spec is in `docs/SPEC.md`, which is the
 If you change behaviour, update the spec in the same change.
 
 ## Hard rules
+- Docs live in `docs/*.md` only; the website renders them. Add new pages to `DOCS` in `tools/site/build.mjs`.
+- The website must stay free of third-party requests (fonts are self-hosted from @fontsource).
 - **No third-party Go modules.** `go.mod` must stay dependency-free (supply-chain argument; also
   the original build environment had no module proxy).
 - **The ledger format is frozen once released.** `record.Entry` and canonical JSON define hashes.
@@ -32,14 +34,17 @@ If you change behaviour, update the spec in the same change.
 | `internal/manifest` | Manifest schema, Ed25519 keys (PKCS#8/PKIX PEM), sign/verify |
 | `internal/verify` | Public verification over HTTP or a store, manifest chain walking |
 | `internal/config`, `internal/geo` | `transparencykit.json`; EU/EEA sets and ISO-country checks |
-| `tools/` | Reusable scripts (`demo.sh`, `release.sh`) |
+| `cmd/tkit` | Same program under the short name `tkit` |
+| `tools/` | Reusable scripts (`demo.sh`, `release.sh`) and `tools/site/` (website builder) |
+| `tools/site/` | Node + marked: landing page `src/index.html`, `src/style.css`, renders `docs/*.md` (nav order in `build.mjs` `DOCS`) |
 | `examples/records/demo.json` | Fictional 117-record dataset used by the demo |
 
 ## Commands
 ```sh
 go test -race ./...                 # all tests (about 50; fake S3, real binary)
 tools/demo.sh --serve               # demo publication on :8080
-tools/release.sh v0.1.0             # static binaries for linux/darwin amd64/arm64 + SHA256SUMS
+tools/release.sh v0.1.0             # static binaries (transparencykit + tkit) + SHA256SUMS
+cd tools/site && npm ci && node build.mjs   # website into _site/ (deployed by .github/workflows/pages.yml)
 ```
 
 ## Open items / next steps

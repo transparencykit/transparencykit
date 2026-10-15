@@ -43,35 +43,59 @@ type App struct {
 	Stderr io.Writer
 	Now    func() time.Time
 	Getenv func(string) string
+	// Prog is the invoked program name ("transparencykit" or "tkit").
+	Prog string
+}
+
+// usageText renders the usage with the invoked program name.
+func (a *App) usageText() string {
+	p := a.Prog
+	if p == "" {
+		p = "transparencykit"
+	}
+	return usageFor(p)
 }
 
 // Main runs the CLI and returns an exit code.
 func Main(args []string) int {
-	a := &App{Stdin: os.Stdin, Stdout: os.Stdout, Stderr: os.Stderr, Now: time.Now, Getenv: os.Getenv}
+	a := &App{Stdin: os.Stdin, Stdout: os.Stdout, Stderr: os.Stderr, Now: time.Now, Getenv: os.Getenv,
+		Prog: filepath.Base(os.Args[0])}
 	return a.Run(args)
 }
 
-const usage = `transparencykit — tamper-evident transparency ledger and signed reports
+// commands is the usage table: synopsis (without program name) and summary.
+var commands = [][2]string{
+	{"init [--dir .]", "Write transparencykit.json and a signing key pair."},
+	{"keygen --out transparencykit.key", "Generate an Ed25519 key pair."},
+	{"record template <type>", "Print a JSON skeleton for a record type."},
+	{"record add <type> [-f file|-] [--amends N] [--by who]", "Validate and append a record."},
+	{"record import -f records.json", "Bulk append; every item is validated first."},
+	{"record retract <seq> --reason \"…\"", "Exclude an earlier record (it stays in the ledger)."},
+	{"record list [--type t] [--json]", "List records (operator view, includes private fields)."},
+	{"record show <seq>", "Show one record."},
+	{"ledger verify [--expect-head sha256:…]", "Verify the whole hash chain."},
+	{"publish --period 2026|2026-H1|2026-Q3|A..B [--out dir] [--dry-run]", "Aggregate, render, sign and upload."},
+	{"verify --pubkey key.pub <https://base|store-url> [reports/<label>/v<N>] [--chain]", "Verify a publication."},
+	{"serve [--addr :8080] [--store url]", "Serve the public store read-only over HTTP."},
+	{"version", "Print the version."},
+}
 
-Usage:
-  transparencykit init [--dir .]                          write transparencykit.json + signing key
-  transparencykit keygen --out transparencykit.key                generate an Ed25519 key pair
-  transparencykit record template <type>                  print a JSON skeleton
-  transparencykit record add <type> [-f file|-] [--amends N] [--by who]
-  transparencykit record import -f records.json           bulk append (validated first)
-  transparencykit record retract <seq> --reason "…"
-  transparencykit record list [--type t] [--json]
-  transparencykit record show <seq>
-  transparencykit ledger verify [--expect-head sha256:…]
-  transparencykit publish --period 2026|2026-H1|2026-Q3|A..B [--out dir] [--dry-run]
-  transparencykit verify --pubkey transparencykit.pub <https://base | store-url> [reports/<label>/v<N>] [--chain]
-  transparencykit serve [--addr :8080] [--store url]
-  transparencykit version
-
+const usageFooter = `
 Record types: gov_request, abuse_notice, subprocessor_change, infrastructure, measures, retraction
-Global flag: --config path (default ./transparencykit.json or $TRANSPARENCYKIT_CONFIG)
-Credentials: EXOSCALE_API_KEY / EXOSCALE_API_SECRET (or AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
+Global flag:  --config path (default ./transparencykit.json or $TRANSPARENCYKIT_CONFIG)
+Credentials:  EXOSCALE_API_KEY / EXOSCALE_API_SECRET (or AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
+Docs:         https://transparencykit.github.io/transparencykit/
 `
+
+func usageFor(prog string) string {
+	var b strings.Builder
+	b.WriteString("transparencykit (short name: tkit): tamper-evident transparency ledger and signed reports\n\nUsage:\n")
+	for _, c := range commands {
+		b.WriteString("  " + prog + " " + c[0] + "\n      " + c[1] + "\n")
+	}
+	b.WriteString(usageFooter)
+	return b.String()
+}
 
 // Run dispatches a command.
 func (a *App) Run(args []string) int {
@@ -93,7 +117,7 @@ func (a *App) Run(args []string) int {
 		}
 	}
 	if len(rest) == 0 {
-		fmt.Fprint(a.Stderr, usage)
+		fmt.Fprint(a.Stderr, a.usageText())
 		return ExitUsage
 	}
 	ctx := context.Background()
@@ -101,7 +125,7 @@ func (a *App) Run(args []string) int {
 	code := ExitOK
 	switch rest[0] {
 	case "help", "-h", "--help":
-		fmt.Fprint(a.Stdout, usage)
+		fmt.Fprint(a.Stdout, a.usageText())
 		return ExitOK
 	case "version":
 		fmt.Fprintln(a.Stdout, "transparencykit", Version)
@@ -121,7 +145,7 @@ func (a *App) Run(args []string) int {
 	case "serve":
 		err = a.cmdServe(cfgPath, rest[1:])
 	default:
-		fmt.Fprintf(a.Stderr, "unknown command %q\n\n%s", rest[0], usage)
+		fmt.Fprintf(a.Stderr, "unknown command %q\n\n%s", rest[0], a.usageText())
 		return ExitUsage
 	}
 	if err != nil {

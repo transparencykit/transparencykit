@@ -41,6 +41,14 @@ func TestUsageAndErrors(t *testing.T) {
 	}
 }
 
+func TestShortProgName(t *testing.T) {
+	a, o, _ := app()
+	a.Prog = "tkit"
+	if a.Run([]string{"help"}) != ExitOK || !strings.Contains(o.String(), "tkit record add") || strings.Contains(o.String(), "transparencykit record add") {
+		t.Fatalf("tkit usage: %s", o)
+	}
+}
+
 func TestParseFlagsAfterPositionals(t *testing.T) {
 	a, _, _ := app()
 	fs := a.flags("x")

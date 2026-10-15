@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TransparencyKit: transparency reports anyone can verify</title>
+<meta name="description" content="Open-source tool for cloud providers: a tamper-evident ledger of government requests, abuse notices and subprocessor changes, published as signed transparency reports, EU Data Act Art. 28 pages and DSA Art. 15 data.">
+<meta property="og:title" content="TransparencyKit">
+<meta property="og:description" content="Transparency reports anyone can verify. Signed, hash-chained, self-hosted.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="landing">
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead">
+  <a class="wordmark" href="./">TransparencyKit</a>
+  <nav aria-label="Site">
+    <a href="docs/">Documentation</a>
+    <a href="docs/verifying.html">Verify a report</a>
+    <a href="https://github.com/transparencykit/transparencykit">GitHub</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div>
+      <h1>Transparency reports anyone can verify.</h1>
+      <p class="lede">TransparencyKit keeps a tamper-evident record of government requests, abuse notices, subprocessor changes and where your infrastructure sits. From it, it publishes signed reports, including the disclosures the EU Data Act and the DSA require.</p>
+      <div class="actions">
+        <a class="button" href="docs/getting-started.html">Get started</a>
+        <a href="https://github.com/transparencykit/transparencykit">Source on GitHub</a>
+      </div>
+      <p class="install"><code>go install github.com/transparencykit/transparencykit/cmd/tkit@latest</code></p>
+    </div>
+
+    <figure class="statement" aria-label="Example of a signed statement from a transparency report">
+      <p class="issuer">Example Cloud SA, transparency report 2026, version 1</p>
+      <dl>
+        <dt>Government and authority requests</dt><dd>29</dd>
+        <dt>Requests rejected</dt><dd>13</dd>
+        <dt>Customers notified before disclosure</dt><dd>16</dd>
+        <dt>Disclosures to third-country authorities</dt><dd class="third"><span class="redacted">0</span></dd>
+      </dl>
+      <p class="seal"><strong>Signature valid</strong>, key ed25519:2f3f8628f71f2838<br>ledger head #117 sha256:5ced619f1c97a630…</p>
+    </figure>
+  </section>
+
+  <section class="section" aria-labelledby="outputs">
+    <div class="section-head">
+      <h2 id="outputs">One ledger, every disclosure</h2>
+      <p>Record each event once. Every publication is derived from the same chain of records, so the numbers in your report, your Data Act page and your DSA filing cannot drift apart.</p>
+    </div>
+    <ol class="index">
+      <li>
+        <cite>Voluntary, following Ranking Digital Rights P11a</cite>
+        <div><h3>Transparency report</h3><p>Government and authority requests by country, outcome, data type and customer notification, with third-country requests such as CLOUD Act orders shown on their own. Abuse notices by category and action.</p></div>
+      </li>
+      <li>
+        <cite>Regulation (EU) 2023/2854, Art. 28</cite>
+        <div><h3>Data Act disclosure</h3><p>The jurisdiction of every zone and the technical, organisational and contractual measures against foreign governmental access, on a stable URL your contracts can reference.</p></div>
+      </li>
+      <li>
+        <cite>Regulation (EU) 2022/2065, Art. 15</cite>
+        <div><h3>DSA transparency data</h3><p>Orders, notices and own-initiative measures for hosting providers, with exact figures in CSV files that follow the tab structure of the Commission's template.</p></div>
+      </li>
+      <li>
+        <cite>GDPR Art. 28 practice</cite>
+        <div><h3>Subprocessor list and feed</h3><p>The current list and a dated change history, with an Atom feed customers can subscribe to instead of scraping your website.</p></div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section" aria-labelledby="how">
+    <div class="section-head">
+      <h2 id="how">How it works</h2>
+      <p>Three commands, run by your legal or trust team. Nothing to host but a bucket.</p>
+    </div>
+    <ol class="steps">
+      <li>
+        <h3>Record</h3>
+        <p>Append each request or change when it happens. Records are validated, hash-chained and stored in an object-locked bucket. Case details stay private.</p>
+        <pre><code>tkit record add gov_request -f req.json</code></pre>
+      </li>
+      <li>
+        <h3>Publish</h3>
+        <p>Aggregate a period, render every output and sign a manifest that lists each file's hash. Small counts are shown as ranges; zeros stay exact.</p>
+        <pre><code>tkit publish --period 2026</code></pre>
+      </li>
+      <li>
+        <h3>Verify</h3>
+        <p>Customers, auditors and journalists check the signature and every file with your public key. A rewritten past report fails the check.</p>
+        <pre><code>tkit verify --pubkey acme.pub --chain \
+  https://transparency.acme.example</code></pre>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section" aria-labelledby="proof">
+    <div class="section-head">
+      <h2 id="proof">Proof, not prose</h2>
+      <p>Most transparency pages are text a provider can change at any time. Each TransparencyKit publication commits to the one before it, so history can be extended but not rewritten.</p>
+    </div>
+    <div class="chain" role="img" aria-label="Three manifests linked by hashes: 2025 version 1, 2026 version 1, and 2026 version 2, each recording the previous manifest's hash.">
+      <div class="sheet"><b>2025, v1</b><span class="k">ledger</span> #64 c41e…<br><span class="k">previous</span> none<br><span class="k">files</span> 14, signed</div>
+      <div class="sheet"><b>2026, v1</b><span class="k">ledger</span> #117 5ced…<br><span class="k">previous</span> <span class="link">sha256 9a07…</span><br><span class="k">files</span> 14, signed</div>
+      <div class="sheet"><b>2026, v2 (correction)</b><span class="k">ledger</span> #121 e18b…<br><span class="k">previous</span> <span class="link">sha256 3fd2…</span><br><span class="k">files</span> 14, signed</div>
+    </div>
+    <div class="proof-notes">
+      <p>Every file is listed in a manifest with its SHA-256 hash and signed with Ed25519. Change one byte and verification fails, naming the file.</p>
+      <p>Each manifest also commits to the head of your private ledger, so an auditor can prove which records a report was built from.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="built">
+    <h2 id="built">Built for providers who host in Europe</h2>
+    <ul class="facts">
+      <li><strong>One static binary.</strong> Written in Go with no third-party dependencies, so the supply chain is short enough to audit.</li>
+      <li><strong>Your storage, your keys.</strong> State lives in Exoscale SOS or any S3-compatible bucket you control. Nothing is sent to anyone else.</li>
+      <li><strong>Immutable by design.</strong> Records are append-only and object-locked. Mistakes are amended or retracted, never deleted.</li>
+      <li><strong>Private stays private.</strong> Case references and notes are hashed into the ledger but never appear in a published file.</li>
+      <li><strong>Open source.</strong> Apache-2.0. Read the specification, run the tests, change what you need.</li>
+      <li><strong>Not legal advice.</strong> Have counsel review your categorisations and the DSA mapping before you file.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>TransparencyKit is open source under the Apache-2.0 licence.</span>
+  <span><a href="docs/">Documentation</a> &nbsp; <a href="docs/SPEC.html">Specification</a> &nbsp; <a href="https://github.com/transparencykit/transparencykit">GitHub</a></span>
+</footer>
+</body>
+</html>

@@ -22,20 +22,22 @@ into something customers, auditors and regulators can check:
   past report is detectable.
 - **Verify** anything, anytime: `transparencykit verify --pubkey transparencykit.pub https://…`.
 
+Website and documentation: **https://transparencykit.github.io/transparencykit/**
+
 > Status: v0.1 (draft). The spec is in [docs/SPEC.md](docs/SPEC.md). Not legal advice. Have
 > counsel review categorisations and map DSA CSVs to the official template before filing.
 
 ## Quick start (local)
 
 ```sh
-go build -trimpath -o transparencykit ./cmd/transparencykit      # or: tools/demo.sh
-./transparencykit init                                   # transparencykit.json + transparencykit.key/.pub
-./transparencykit record template gov_request > req.json # edit it
-./transparencykit record add gov_request -f req.json --by legal@example.ch
-./transparencykit ledger verify
-./transparencykit publish --period 2026
-./transparencykit verify --pubkey transparencykit.pub --chain file://$PWD/public
-./transparencykit serve                                  # http://localhost:8080
+go install github.com/transparencykit/transparencykit/cmd/tkit@latest   # or build: go build ./cmd/transparencykit
+tkit init                                   # transparencykit.json + transparencykit.key/.pub
+tkit record template gov_request > req.json # edit it
+tkit record add gov_request -f req.json --by legal@example.ch
+tkit ledger verify
+tkit publish --period 2026
+tkit verify --pubkey transparencykit.pub --chain file://$PWD/public
+tkit serve                                  # http://localhost:8080
 ```
 
 `tools/demo.sh --serve` builds a full demo (fictional provider, 117 records) and serves it.
@@ -60,6 +62,8 @@ SOS has no static website hosting. Readers use direct object URLs
 (`…/latest/index.html`) or `transparencykit serve`. See [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
 ## Commands
+
+The binary is `transparencykit`; `tkit` is the same program under a short name.
 
 | Command | |
 |---|---|
@@ -94,6 +98,17 @@ TRANSPARENCYKIT_SOS_TEST_BUCKET=… TRANSPARENCYKIT_SOS_TEST_ZONE=ch-gva-2 go te
 See [docs/TESTING.md](docs/TESTING.md) for the test plan and [AGENTS.md](AGENTS.md) for the
 code map.
 
+## Website
+
+The site in `tools/site/` renders `docs/*.md` together with the landing page. GitHub Actions
+(`.github/workflows/pages.yml`) builds and deploys it to GitHub Pages on every push to `main`
+that touches `docs/` or `tools/site/`. Build locally with:
+
+```sh
+cd tools/site && npm ci && node build.mjs   # output in ../../_site
+```
+
 ## Licence
 
-Apache-2.0
+Copyright 2026 The TransparencyKit Authors. Licensed under the Apache License, Version 2.0; see
+[LICENSE](LICENSE).

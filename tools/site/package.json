@@ -1,0 +1,14 @@
+{
+  "name": "transparencykit-site",
+  "private": true,
+  "type": "module",
+  "description": "Builds the TransparencyKit website and renders docs/*.md into it.",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/spectral": "5.3.0",
+    "marked": "18.1.1"
+  }
+}

@@ -12,6 +12,10 @@ for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64; d
   CGO_ENABLED=0 GOOS=$os GOARCH=$arch go build -trimpath -buildvcs=false \
     -ldflags "-s -w -X github.com/transparencykit/transparencykit/internal/cli.Version=$version" \
     -o "$out/transparencykit-$version-$os-$arch$ext" "$root/cmd/transparencykit"
+  # tkit: identical program under its short name
+  CGO_ENABLED=0 GOOS=$os GOARCH=$arch go build -trimpath -buildvcs=false \
+    -ldflags "-s -w -X github.com/transparencykit/transparencykit/internal/cli.Version=$version" \
+    -o "$out/tkit-$version-$os-$arch$ext" "$root/cmd/tkit"
 done
-(cd "$out" && sha256sum transparencykit-* > SHA256SUMS)
+(cd "$out" && sha256sum transparencykit-* tkit-* > SHA256SUMS)
 cat "$out/SHA256SUMS"
