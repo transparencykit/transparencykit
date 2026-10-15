@@ -1,7 +1,7 @@
-dist/
-demo/
+/dist/
+/demo/
 *.key
-transparencykit.json
-ledger/
-public/
-_site/
+/transparencykit.json
+/ledger/
+/public/
+/_site/
