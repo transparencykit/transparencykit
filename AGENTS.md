@@ -38,7 +38,7 @@ If you change behaviour, update the spec in the same change.
 | `cmd/tkit` | Same program under the short name `tkit` |
 | `tools/` | Reusable scripts (`demo.sh`, `release.sh`) and `tools/site/` (website builder) |
 | `tools/site/` | Node + marked: landing page `src/index.html`, `src/style.css`, renders `docs/*.md` (nav order in `build.mjs` `DOCS`) |
-| `examples/records/demo.json` | Fictional 117-record dataset used by the demo |
+| `examples/so-sovereign-cloud/` | Fictional provider "So Sovereign Cloud SA": records, config, demo-only key; published at /example/ by `tools/example.sh` |
 
 ## Commands
 ```sh

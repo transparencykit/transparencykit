@@ -1,0 +1,16 @@
+{
+  "provider": {
+    "name": "So Sovereign Cloud SA",
+    "legal_entity": "So Sovereign Cloud SA",
+    "country": "CH",
+    "contact": "transparency@so-sovereign.example",
+    "website": "https://so-sovereign.example",
+    "service_type": "provider of hosting services"
+  },
+  "home_jurisdictions": ["CH", "EU", "EEA"],
+  "ledger": "file://./ledger",
+  "public": "file://./public",
+  "public_base_url": "https://transparencykit.github.io/transparencykit/example",
+  "signing_key": "transparencykit.key",
+  "min_count": 3
+}

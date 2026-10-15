@@ -40,7 +40,10 @@ tkit verify --pubkey transparencykit.pub --chain file://$PWD/public
 tkit serve                                  # http://localhost:8080
 ```
 
-`tools/demo.sh --serve` builds a full demo (fictional provider, 117 records) and serves it.
+`tools/demo.sh --serve` builds the **So Sovereign Cloud SA** example (a fictional provider, 117
+records) and serves it. The same example is published, signed, at
+<https://transparencykit.github.io/transparencykit/example/>; see
+[examples/so-sovereign-cloud](examples/so-sovereign-cloud/).
 
 ## On Exoscale SOS
 

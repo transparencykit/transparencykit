@@ -32,6 +32,19 @@ verified 2 publication(s) with key ed25519:2f3f8628f71f2838
 | `1` | Verification failed. The message names the file or link that does not match. |
 | `2` | Usage or network error; nothing was concluded. |
 
+## Try it on the example
+
+The website publishes a signed report for **So Sovereign Cloud SA**, a fictional provider. Its
+public key is in the repository:
+
+```sh
+curl -sO https://raw.githubusercontent.com/transparencykit/transparencykit/main/examples/so-sovereign-cloud/transparencykit.pub
+tkit verify --pubkey transparencykit.pub --chain https://transparencykit.github.io/transparencykit/example
+```
+
+Then [open the report](https://transparencykit.github.io/transparencykit/example/latest/index.html)
+and its [Data Act page](https://transparencykit.github.io/transparencykit/example/latest/data-act-art28.html).
+
 ## What a pass proves
 
 - **The files are the ones the provider signed.** Every published file is listed in

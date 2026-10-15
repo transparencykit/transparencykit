@@ -3,12 +3,12 @@
   "type": "infrastructure",
   "body": {
    "effective": "2025-01-01",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "country": "CH",
    "city": "Geneva",
-   "operator": "Example DC Geneva SA",
+   "operator": "Lac Léman Datacentre SA",
    "operator_country": "CH",
-   "legal_entity": "Example Cloud SA",
+   "legal_entity": "So Sovereign Cloud SA",
    "legal_entity_country": "CH",
    "services": [
     "compute",
@@ -22,12 +22,12 @@
   "type": "infrastructure",
   "body": {
    "effective": "2025-01-01",
-   "zone": "ch-zrh-1",
+   "zone": "ch-uet-1",
    "country": "CH",
    "city": "Zurich",
-   "operator": "Example DC Zurich AG",
+   "operator": "Uetliberg Rechenzentrum AG",
    "operator_country": "CH",
-   "legal_entity": "Example Cloud SA",
+   "legal_entity": "So Sovereign Cloud SA",
    "legal_entity_country": "CH",
    "services": [
     "compute",
@@ -40,12 +40,12 @@
   "type": "infrastructure",
   "body": {
    "effective": "2025-06-01",
-   "zone": "de-fra-1",
+   "zone": "de-mai-1",
    "country": "DE",
    "city": "Frankfurt",
-   "operator": "Example Colo GmbH",
+   "operator": "Mainhattan Colocation GmbH",
    "operator_country": "DE",
-   "legal_entity": "Example Cloud SA",
+   "legal_entity": "So Sovereign Cloud SA",
    "legal_entity_country": "CH",
    "services": [
     "compute",
@@ -58,7 +58,7 @@
   "type": "measures",
   "body": {
    "effective": "2026-01-01",
-   "statement": "Customer data is stored and processed only in the zone the customer selects. No group company or subprocessor subject to third-country disclosure laws has access to customer data.",
+   "statement": "Your data stays in the zone you pick, run by Swiss and EU companies only. Nobody here answers to a foreign subpoena, and we have the signed ledger to prove it.",
    "technical": [
     "Encryption at rest for block and object storage, keys held in-zone",
     "Customer-provided keys (SSE-C) for object storage",
@@ -80,7 +80,7 @@
   "body": {
    "effective": "2025-03-01",
    "change": "add",
-   "name": "Example Mail AG",
+   "name": "Pigeon Post AG",
    "purpose": "Transactional e-mail",
    "locations": [
     "CH"
@@ -96,7 +96,7 @@
   "body": {
    "effective": "2025-09-01",
    "change": "add",
-   "name": "Example Support GmbH",
+   "name": "Helpdesk Helden GmbH",
    "purpose": "Second-level support (no data access by default)",
    "locations": [
     "DE"
@@ -112,7 +112,7 @@
   "body": {
    "effective": "2026-05-01",
    "change": "update",
-   "name": "Example Mail AG",
+   "name": "Pigeon Post AG",
    "purpose": "Transactional e-mail and SMS",
    "locations": [
     "CH",
@@ -129,7 +129,7 @@
   "body": {
    "effective": "2026-10-01",
    "change": "add",
-   "name": "Example Payments SA",
+   "name": "Franc Fort Payments SA",
    "purpose": "Card payment processing",
    "locations": [
     "CH"
@@ -156,7 +156,7 @@
    "completed_at": "2026-06-06T13:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-001"
    }
@@ -178,7 +178,7 @@
    "completed_at": "2026-09-05T12:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-002"
    }
@@ -200,7 +200,7 @@
    "completed_at": "2026-04-03T08:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-003"
    }
@@ -222,7 +222,7 @@
    "completed_at": "2026-04-04T15:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-004"
    }
@@ -244,7 +244,7 @@
    "completed_at": "2026-02-09T16:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-005"
    }
@@ -266,7 +266,7 @@
    "completed_at": "2026-04-03T15:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-006"
    }
@@ -288,7 +288,7 @@
    "completed_at": "2026-03-19T08:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-007"
    }
@@ -310,7 +310,7 @@
    "completed_at": "2026-03-05T16:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-008"
    }
@@ -332,7 +332,7 @@
    "completed_at": "2026-02-19T08:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-009"
    }
@@ -354,7 +354,7 @@
    "completed_at": "2026-04-17T15:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-010"
    }
@@ -376,7 +376,7 @@
    "completed_at": "2026-08-13T11:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-011"
    }
@@ -398,7 +398,7 @@
    "completed_at": "2026-04-04T16:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-012"
    }
@@ -420,7 +420,7 @@
    "completed_at": "2026-08-11T16:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-013"
    }
@@ -442,7 +442,7 @@
    "completed_at": "2026-07-07T12:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-014"
    }
@@ -454,7 +454,7 @@
    "received_at": "2026-01-22T08:00:00Z",
    "authority_country": "CH",
    "authority_type": "court",
-   "legal_basis": "CH B\u00dcPF",
+   "legal_basis": "CH BÜPF",
    "kind": "user_data",
    "data_category": "non_content",
    "accounts": 2,
@@ -464,7 +464,7 @@
    "completed_at": "2026-01-23T08:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-015"
    }
@@ -476,7 +476,7 @@
    "received_at": "2026-06-20T14:00:00Z",
    "authority_country": "CH",
    "authority_type": "court",
-   "legal_basis": "CH B\u00dcPF",
+   "legal_basis": "CH BÜPF",
    "kind": "user_data",
    "data_category": "content",
    "accounts": 1,
@@ -486,7 +486,7 @@
    "completed_at": "2026-06-21T14:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-016"
    }
@@ -498,7 +498,7 @@
    "received_at": "2026-02-09T14:00:00Z",
    "authority_country": "CH",
    "authority_type": "court",
-   "legal_basis": "CH B\u00dcPF",
+   "legal_basis": "CH BÜPF",
    "kind": "user_data",
    "data_category": "non_content",
    "accounts": 1,
@@ -508,7 +508,7 @@
    "completed_at": "2026-02-10T14:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-017"
    }
@@ -520,7 +520,7 @@
    "received_at": "2026-05-21T16:00:00Z",
    "authority_country": "DE",
    "authority_type": "law_enforcement",
-   "legal_basis": "DE StPO \u00a7 100j",
+   "legal_basis": "DE StPO § 100j",
    "kind": "user_data",
    "data_category": "content",
    "accounts": 2,
@@ -530,7 +530,7 @@
    "completed_at": "2026-05-22T16:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-018"
    }
@@ -542,7 +542,7 @@
    "received_at": "2026-07-22T12:00:00Z",
    "authority_country": "DE",
    "authority_type": "law_enforcement",
-   "legal_basis": "DE StPO \u00a7 100j",
+   "legal_basis": "DE StPO § 100j",
    "kind": "user_data",
    "data_category": "content",
    "accounts": 2,
@@ -552,7 +552,7 @@
    "completed_at": "2026-07-23T12:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-019"
    }
@@ -564,7 +564,7 @@
    "received_at": "2026-03-20T08:00:00Z",
    "authority_country": "DE",
    "authority_type": "law_enforcement",
-   "legal_basis": "DE StPO \u00a7 100j",
+   "legal_basis": "DE StPO § 100j",
    "kind": "user_data",
    "data_category": "non_content",
    "accounts": 1,
@@ -574,7 +574,7 @@
    "completed_at": "2026-03-21T08:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-020"
    }
@@ -586,7 +586,7 @@
    "received_at": "2026-05-05T10:00:00Z",
    "authority_country": "DE",
    "authority_type": "law_enforcement",
-   "legal_basis": "DE StPO \u00a7 100j",
+   "legal_basis": "DE StPO § 100j",
    "kind": "user_data",
    "data_category": "content",
    "accounts": 2,
@@ -596,7 +596,7 @@
    "completed_at": "2026-05-06T10:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-021"
    }
@@ -618,7 +618,7 @@
    "completed_at": "2026-02-07T14:00:00Z",
    "customer_notification": "not_applicable",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-022"
    }
@@ -640,7 +640,7 @@
    "completed_at": "2026-07-19T11:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-023"
    }
@@ -662,7 +662,7 @@
    "completed_at": "2026-07-09T09:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-024"
    }
@@ -674,7 +674,7 @@
    "received_at": "2026-04-22T10:00:00Z",
    "authority_country": "AT",
    "authority_type": "law_enforcement",
-   "legal_basis": "AT StPO \u00a7 76a",
+   "legal_basis": "AT StPO § 76a",
    "kind": "user_data",
    "data_category": "content",
    "accounts": 3,
@@ -684,7 +684,7 @@
    "completed_at": "2026-04-23T10:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-025"
    }
@@ -696,7 +696,7 @@
    "received_at": "2026-03-09T11:00:00Z",
    "authority_country": "AT",
    "authority_type": "law_enforcement",
-   "legal_basis": "AT StPO \u00a7 76a",
+   "legal_basis": "AT StPO § 76a",
    "kind": "user_data",
    "data_category": "non_content",
    "accounts": 2,
@@ -706,7 +706,7 @@
    "completed_at": "2026-03-10T11:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-026"
    }
@@ -718,7 +718,7 @@
    "received_at": "2026-09-12T16:00:00Z",
    "authority_country": "US",
    "authority_type": "law_enforcement",
-   "legal_basis": "US 18 U.S.C. \u00a7 2713 (CLOUD Act)",
+   "legal_basis": "US 18 U.S.C. § 2713 (CLOUD Act)",
    "kind": "user_data",
    "data_category": "non_content",
    "accounts": 1,
@@ -728,7 +728,7 @@
    "completed_at": "2026-09-13T16:00:00Z",
    "customer_notification": "notified_before",
    "service": "compute",
-   "zone": "ch-gva-2",
+   "zone": "ch-lmn-1",
    "private": {
     "case_ref": "LEG-2026-027"
    }

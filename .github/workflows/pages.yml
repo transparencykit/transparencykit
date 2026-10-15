@@ -2,7 +2,7 @@ name: pages
 on:
   push:
     branches: [main]
-    paths: ["docs/**", "tools/site/**", ".github/workflows/pages.yml"]
+    paths: ["docs/**", "tools/site/**", "tools/example.sh", "examples/**", "cmd/**", "internal/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -26,6 +26,12 @@ jobs:
         run: |
           npm ci
           SITE_OUT="$GITHUB_WORKSPACE/_site" node build.mjs
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: false
+      - name: Publish the So Sovereign Cloud example
+        run: tools/example.sh _site/example
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

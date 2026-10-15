@@ -5,3 +5,6 @@
 /ledger/
 /public/
 /_site/
+!/examples/so-sovereign-cloud/transparencykit.key
+/examples/*/ledger/
+/examples/*/public/
