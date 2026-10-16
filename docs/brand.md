@@ -134,8 +134,7 @@ TransparencyKit's palette, system-font SVGs and offline website requirements.
 
 Approved artwork lives in `tools/site/src/assets/brand/` and
 `tools/site/src/assets/illustrations/`; browser icons live directly in `tools/site/src/`.
-Those SVGs are the editable production sources. The earlier `tools/site/design-proposals/`
-folder is a design study, not a build dependency or the source of future production changes.
+Those SVGs are the editable production sources and require no separate generation step.
 
 Documentation lives in `docs/*.md`. Reference artwork using paths such as
 `../tools/site/src/assets/illustrations/concept-compact-light.svg`: these work in the
