@@ -56,16 +56,27 @@ tkit verify --pubkey transparencykit.pub --chain https://transparencykit.dev/exa
 Then [open the report](https://transparencykit.dev/example/latest/index.html)
 and its [Data Act page](https://transparencykit.dev/example/latest/data-act-art28.html).
 
+## How publications link together
+
+A correction creates a new version instead of editing an earlier publication. Each manifest
+records the hash of the previous publication's manifest. The links point backward through
+publication order, which can include corrections to older reporting periods.
+
+![Three publications refer backward through previous-manifest hashes. Corrections add a version; retained trusted copies help detect changes or rollback.](../tools/site/src/assets/illustrations/history-compact-light.svg)
+
+Use `--checkpoint seen.json` or keep trusted copies of manifests you have checked. Hash links
+alone cannot tell you whether the server has replayed an older, internally valid history.
+
 ## What a pass proves
 
 - **The files are the ones the provider signed.** Every published file is listed in
   `manifest.json` with its SHA-256 hash and size, and the manifest is signed with Ed25519.
-- **Past reports were not quietly rewritten.** Each manifest records the hash of the previous
-  one and its position in the history. With `--chain`, the check walks back to the first
-  publication. A correction appears as a new version, never as an edit.
-- **The numbers come from one specific ledger state.** Each manifest commits to the hash of the
-  provider's private ledger. An auditor with ledger access can confirm it with
-  `tkit ledger verify --expect-head <hash>`.
+- **The referenced history matches its links.** With `--chain`, each earlier manifest reached
+  through the checked publication's links must match the hash and position recorded by its
+  successor.
+- **The manifest identifies a ledger state.** An auditor with ledger access can confirm that
+  the committed hash occurs in the ledger with `tkit ledger verify --expect-head <hash>`.
+  Checking the reported calculations against those records is a separate audit step.
 
 ## What it cannot prove
 

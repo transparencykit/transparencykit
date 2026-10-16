@@ -1,5 +1,5 @@
 // Builds the TransparencyKit website into ../../_site (or $SITE_OUT).
-//   - src/index.html, style.css, favicon.svg  -> site root
+//   - src/index.html, style.css, icons, assets -> site root
 //   - docs/*.md (repository root)             -> docs/<name>.html, rendered with marked
 //   - fonts from @fontsource                  -> fonts/ (self-hosted; no third-party requests)
 // All links are relative, so the site works on github.io/<repo>/ and on a custom domain.
@@ -21,6 +21,7 @@ const DOCS = [
   { file: "storage.md", title: "Storage requirements" },
   { file: "verifying.md", title: "Verifying a publication" },
   { file: "OPERATIONS.md", title: "Operations" },
+  { file: "brand.md", title: "Brand guidelines" },
   { file: "SPEC.md", title: "Specification" },
   { file: "TESTING.md", title: "Testing" },
 ];
@@ -39,10 +40,20 @@ function slugify(text) {
 }
 
 const docFiles = new Set(DOCS.map((d) => d.file));
+const ASSET_SOURCE = "../tools/site/src/assets/";
+const ROOT_ICONS = ["favicon.svg", "favicon.ico", "favicon-16.png", "favicon-32.png", "apple-touch-icon.png"];
+
+function assetHref(href) {
+  if (href?.startsWith(ASSET_SOURCE)) return "../assets/" + href.slice(ASSET_SOURCE.length);
+  const name = href?.replace(/^\.\.\/tools\/site\/src\//, "");
+  return name !== href && ROOT_ICONS.includes(name) ? "../" + name : null;
+}
 
 // Rewrite links between Markdown files so they work on the site.
 function rewriteHref(href) {
   if (!href || /^(https?:|mailto:|#)/.test(href)) return href;
+  const asset = assetHref(href);
+  if (asset) return asset;
   const [p, hash = ""] = href.split("#");
   const frag = hash ? "#" + hash : "";
   const base = path.posix.basename(p);
@@ -73,6 +84,23 @@ function render(md) {
       const t = title ? ` title="${escapeHTML(title)}"` : "";
       return `<a href="${escapeHTML(rewriteHref(href))}"${t}>${text}</a>`;
     },
+    image({ href, title, text }) {
+      const src = assetHref(href) || href;
+      const t = title ? ` title="${escapeHTML(title)}"` : "";
+      let dimensions = "";
+      if (assetHref(href) && src.endsWith(".svg")) {
+        const svg = fs.readFileSync(path.join(here, "src", src.slice(3)), "utf8");
+        const size = svg.match(/<svg\b[^>]*\bwidth="(\d+)"[^>]*\bheight="(\d+)"/);
+        if (size) dimensions = ` width="${size[1]}" height="${size[2]}"`;
+      }
+      const img = `<img src="${escapeHTML(src)}" alt="${escapeHTML(text)}"${dimensions}${t} loading="lazy" decoding="async">`;
+      if (assetHref(href) && src.endsWith("-light.svg")) {
+        const dark = src.replace(/-light\.svg$/, "-dark.svg");
+        const kind = src.includes("/illustrations/") ? "doc-diagram" : "brand-image";
+        return `<picture class="${kind}"><source media="(prefers-color-scheme: dark)" srcset="${escapeHTML(dark)}">${img}</picture>`;
+      }
+      return img;
+    },
     table(token) {
       return `<div class="table-wrap">${Renderer.prototype.table.call(this, token)}</div>\n`;
     },
@@ -101,13 +129,17 @@ function docPage({ title, file, html, headings, description }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHTML(title)}: TransparencyKit documentation</title>
 <meta name="description" content="${escapeHTML(description)}">
+<link rel="icon" href="../favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" sizes="180x180">
+<meta name="theme-color" content="#f5f7f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1f22" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body class="docs">
 <a class="skip" href="#content">Skip to content</a>
 <header class="masthead">
-  <a class="wordmark" href="../">TransparencyKit <span>documentation</span></a>
+  <a class="wordmark" href="../"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/brand/logo-dark.svg"><img src="../assets/brand/logo-light.svg" width="500" height="80" alt="TransparencyKit home"></picture><span>documentation</span></a>
   <nav aria-label="Site">
     <a href="./"${outName === "index.html" ? ' aria-current="page"' : ""}>Documentation</a>
     <a href="verifying.html">Verify a report</a>
@@ -144,9 +176,10 @@ fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(path.join(out, "docs"), { recursive: true });
 fs.mkdirSync(path.join(out, "fonts"), { recursive: true });
 
-for (const f of ["index.html", "style.css", "favicon.svg"]) {
+for (const f of ["index.html", "style.css", ...ROOT_ICONS]) {
   fs.copyFileSync(path.join(here, "src", f), path.join(out, f));
 }
+fs.cpSync(path.join(here, "src", "assets"), path.join(out, "assets"), { recursive: true });
 
 const fonts = {
   "spectral-400.woff2": "@fontsource/spectral/files/spectral-latin-400-normal.woff2",

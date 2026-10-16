@@ -38,6 +38,8 @@
 }
 
 * { box-sizing: border-box; }
+img { max-width: 100%; height: auto; }
+picture { display: block; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
@@ -72,19 +74,20 @@ pre code { background: none; padding: 0; font-size: inherit; }
 
 /* ---------- Masthead ---------- */
 .masthead {
-  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.6rem 1rem;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.8rem 1.5rem;
   max-width: 72rem; margin: 0 auto; padding: 1.4rem 1.25rem 0;
 }
-.wordmark { font-weight: 600; font-size: 1.15rem; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
-.wordmark span { font-weight: 400; color: var(--ink-soft); }
+.wordmark { display: inline-flex; align-items: center; gap: 1rem; color: var(--ink); text-decoration: none; }
+.wordmark img { display: block; width: 240px; height: auto; }
+.wordmark span { font-size: 1rem; color: var(--ink-soft); }
 .masthead nav { display: flex; gap: 1.4rem; font-size: 1rem; }
 .masthead nav a { color: var(--ink); text-decoration: none; }
 .masthead nav a:hover, .masthead nav a[aria-current="page"] { text-decoration: underline; }
 
 /* ---------- Landing ---------- */
-.landing main { overflow-x: clip; max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+.landing main { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
 
-.hero { padding: 5.5rem 0 4.5rem; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 4rem; align-items: end; }
+.hero { padding: 5rem 0 4rem; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
 .hero h1 {
   font-size: clamp(2.5rem, 5.6vw, 4.4rem);
   line-height: 1.02;
@@ -103,6 +106,12 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .button:hover { background: var(--seal); }
 .install { margin-top: 1.6rem; font-size: 0.82rem; }
 .install code { background: none; padding: 0; color: var(--ink-soft); word-break: break-all; }
+.hero-art { min-width: 0; margin: 0; }
+.hero-art img { display: block; width: 100%; }
+.eyebrow { color: var(--ink-soft); font: 0.75rem/1.5 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.example-panel { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr); gap: 4rem; align-items: center; padding: 3rem 0 4rem; }
+.example-panel h2 { font-size: 2rem; margin: 0 0 1rem; max-width: 20ch; }
+.example-panel > div > p:not(.eyebrow) { max-width: var(--measure); color: var(--ink-soft); }
 
 /* The statement: one redaction bar lifts to reveal a signed fact. */
 .statement {
@@ -160,19 +169,12 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .steps p { margin: 0 0 0.6rem; }
 .steps pre { font-size: 0.76rem; margin: 0.6rem 0 0; }
 
-/* Manifest chain diagram */
-.chain { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 2rem 0 1rem; }
-.sheet { border: 1px solid var(--rule); background: var(--paper); padding: 1rem 1.1rem; font-family: var(--mono); font-size: 0.74rem; line-height: 1.7; position: relative; }
-.sheet + .sheet { border-left: none; }
-.sheet b { display: block; font-family: var(--serif); font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; }
-.sheet .k { color: var(--ink-soft); }
-.sheet .link { color: var(--seal); }
-.sheet + .sheet::before {
-  content: ""; position: absolute; left: -0.45rem; top: 50%; width: 0.9rem; height: 0.9rem;
-  background: var(--seal); border-radius: 50%; transform: translateY(-50%);
-  box-shadow: 0 0 0 3px var(--paper);
-}
+/* Diagrams have separate narrow compositions rather than shrinking labels. */
+.diagram { margin: 0; min-width: 0; }
+.diagram img { display: block; width: 100%; }
+.diagram figcaption { margin-top: 1rem; max-width: 48rem; font-size: 0.95rem; color: var(--ink-soft); }
 .proof-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 3rem; max-width: 56rem; }
+.diagram + .proof-notes { margin-top: 2rem; }
 .proof-notes p { margin: 0; }
 
 .facts { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 3rem; max-width: 60rem; }
@@ -215,15 +217,22 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .prose td code, .prose th code { white-space: nowrap; }
 .prose hr { border: 0; border-top: 1px solid var(--rule); margin: 2.4rem 0; }
 .prose .edit { margin-top: 3rem; font-size: 0.9rem; color: var(--ink-soft); }
+.prose .doc-diagram { margin: 2rem 0; }
+.prose .doc-diagram img { display: block; width: 100%; max-width: 384px; margin: 0 auto; }
+.prose .brand-image { margin: 1.5rem 0; }
+.prose .brand-image img { display: block; }
+.prose img { vertical-align: middle; }
+
+@media (max-width: 1024px) {
+  .diagram img { max-width: 384px; margin: 0 auto; }
+}
 
 /* ---------- Small screens ---------- */
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 3.5rem 0 3rem; }
   .index li { grid-template-columns: 1fr; gap: 0.3rem; }
   .steps { grid-template-columns: 1fr; gap: 2rem; }
-  .chain { grid-template-columns: 1fr; }
-  .sheet + .sheet { border-left: 1px solid var(--rule); border-top: none; }
-  .sheet + .sheet::before { left: 50%; top: -0.45rem; transform: translateX(-50%); }
+  .example-panel { grid-template-columns: 1fr; gap: 2rem; }
   .proof-notes { grid-template-columns: 1fr; }
   .facts { columns: 1; }
   .docs-shell { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; padding-top: 1.2rem; }
@@ -236,4 +245,11 @@ pre code { background: none; padding: 0; font-size: inherit; }
   .wordmark span { display: none; }
   .prose td code, .prose th code { white-space: normal; }
   .masthead nav { gap: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .wordmark img { width: 220px; }
+  .hero { padding-top: 3rem; }
+  .hero-art { max-width: 400px; }
+  .section { padding: 3rem 0; }
 }

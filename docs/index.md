@@ -19,6 +19,19 @@ created; see [Storage requirements](storage.md).
 | Run it in production on Exoscale SOS | [Operations](OPERATIONS.md) |
 | Understand the formats and guarantees exactly | [Specification](SPEC.md) |
 | See what the test suite proves | [Testing](TESTING.md) |
+| Use the logo, colors or illustrations | [Brand guidelines](brand.md) |
+
+## From private records to public files
+
+The ledger contains the operator's case records. Publishing selects public information,
+aggregates it and signs a manifest of the output files. Readers can verify the signature and
+file hashes using a public key obtained independently from a trusted source.
+
+![Private case records stay with the operator. TransparencyKit publishes signed public projections, which readers verify with an independently trusted public key.](../tools/site/src/assets/illustrations/concept-compact-light.svg)
+
+Case references and notes in `private` are omitted from public outputs. Report breakdowns may
+be banded; DSA CSVs remain exact. A signature authenticates the files, not the completeness of
+the provider's reporting.
 
 ## What it records
 

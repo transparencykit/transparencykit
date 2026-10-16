@@ -7,13 +7,17 @@
 <meta name="description" content="Open-source tool for cloud providers: a tamper-evident ledger of government requests, abuse notices and subprocessor changes, published as signed transparency reports, EU Data Act Art. 28 pages and DSA Art. 15 data.">
 <meta property="og:title" content="TransparencyKit">
 <meta property="og:description" content="Transparency reports anyone can verify. Signed, hash-chained, self-hosted.">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+<meta name="theme-color" content="#f5f7f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1f22" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="landing">
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead">
-  <a class="wordmark" href="./">TransparencyKit</a>
+  <a class="wordmark" href="./"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/brand/logo-dark.svg"><img src="assets/brand/logo-light.svg" width="500" height="80" alt="TransparencyKit home"></picture></a>
   <nav aria-label="Site">
     <a href="docs/">Documentation</a>
     <a href="docs/verifying.html">Verify a report</a>
@@ -25,15 +29,45 @@
   <section class="hero">
     <div>
       <h1>Transparency reports anyone can verify.</h1>
-      <p class="lede">TransparencyKit keeps a tamper-evident record of government requests, abuse notices, subprocessor changes and where your infrastructure sits. From it, it publishes signed reports, including the disclosures the EU Data Act and the DSA require.</p>
+      <p class="lede">Keep a private, tamper-evident ledger of government requests, abuse notices and infrastructure changes. Publish signed disclosures that customers and auditors can check for themselves.</p>
       <div class="actions">
         <a class="button" href="docs/getting-started.html">Get started</a>
         <a href="example/latest/index.html">See an example report</a>
-        <a href="https://github.com/transparencykit/transparencykit">Source on GitHub</a>
       </div>
       <p class="install"><code>go install github.com/transparencykit/transparencykit/cmd/tkit@latest</code></p>
     </div>
 
+    <figure class="hero-art">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="assets/illustrations/hero-dark.svg">
+        <img src="assets/illustrations/hero-light.svg" width="960" height="640" alt="TransparencyKit creates a separate signed public report while the original case file and private notes stay with the operator." fetchpriority="high" decoding="async">
+      </picture>
+    </figure>
+  </section>
+
+  <section class="section" aria-labelledby="concept">
+    <div class="section-head">
+      <h2 id="concept">Private records. Public proof.</h2>
+      <p>Your ledger holds the case details. TransparencyKit publishes public projections, then signs a manifest of the files. Readers check those files using a public key they trust.</p>
+    </div>
+    <figure class="diagram">
+      <picture>
+        <source media="(max-width: 1024px) and (prefers-color-scheme: dark)" srcset="assets/illustrations/concept-compact-dark.svg" width="384" height="1032">
+        <source media="(max-width: 1024px)" srcset="assets/illustrations/concept-compact-light.svg" width="384" height="1032">
+        <source media="(prefers-color-scheme: dark)" srcset="assets/illustrations/concept-dark.svg">
+        <img src="assets/illustrations/concept-light.svg" width="1280" height="720" alt="Private ledger records flow through TransparencyKit to signed public reports. Readers verify the file hashes and signature with an independently trusted public key." loading="lazy" decoding="async">
+      </picture>
+      <figcaption>Case references and notes stay private. Report breakdowns may be banded; DSA CSVs remain exact. <a href="docs/">Explore the workflow</a>.</figcaption>
+    </figure>
+  </section>
+
+  <section class="example-panel" aria-labelledby="example-heading">
+    <div>
+      <p class="eyebrow">A publication you can inspect</p>
+      <h2 id="example-heading">See the records become a report.</h2>
+      <p>Meet So Sovereign Cloud SA, a fictional provider with 117 ledger records. Browse its published report, read the Data Act disclosure, or verify the signed files yourself.</p>
+      <a href="example/latest/index.html">Open the example report <span aria-hidden="true">↗</span></a>
+    </div>
     <figure class="statement" aria-label="Extract from the signed example report of So Sovereign Cloud SA, a fictional provider">
       <p class="issuer">So Sovereign Cloud SA (fictional), transparency report 2026</p>
       <dl>
@@ -42,14 +76,14 @@
         <dt>Accounts specified in requests</dt><dd>53</dd>
         <dt>Disclosures to third-country authorities</dt><dd class="third"><span class="redacted">0</span></dd>
       </dl>
-      <p class="seal"><strong>Signature valid</strong>, key ed25519:393c7a476c60c098<br>117 ledger records, <a href="example/latest/index.html">open the full report</a></p>
+      <p class="seal"><strong>Signed example publication</strong><br>Key ed25519:393c7a476c60c098 · <a href="docs/verifying.html">run the verification</a></p>
     </figure>
   </section>
 
   <section class="section" aria-labelledby="outputs">
     <div class="section-head">
       <h2 id="outputs">One ledger, every disclosure</h2>
-      <p>Record each event once. Every publication is derived from the same chain of records, so the numbers in your report, your Data Act page and your DSA filing cannot drift apart.</p>
+      <p>Record each event once. Generate the transparency report, Data Act page, DSA data and subprocessor feed from the same ledger state.</p>
     </div>
     <ol class="index">
       <li>
@@ -74,7 +108,7 @@
   <section class="section" aria-labelledby="how">
     <div class="section-head">
       <h2 id="how">How it works</h2>
-      <p>Three commands, run by your legal or trust team. Nothing to host but a bucket.</p>
+      <p>One static binary, your storage and your signing key. Start locally, then move to object-locked storage.</p>
     </div>
     <ol class="steps">
       <li>
@@ -89,7 +123,7 @@
       </li>
       <li>
         <h3>Verify</h3>
-        <p>Customers, auditors and journalists check the signature and every file with your public key. A rewritten past report fails the check.</p>
+        <p>Customers, auditors and journalists check signatures, file hashes and links to earlier publications with a trusted public key.</p>
         <pre><code>tkit verify --pubkey acme.pub --chain \
   https://transparency.acme.example</code></pre>
       </li>
@@ -98,17 +132,21 @@
 
   <section class="section" aria-labelledby="proof">
     <div class="section-head">
-      <h2 id="proof">Proof, not prose</h2>
-      <p>Most transparency pages are text a provider can change at any time. Each TransparencyKit publication commits to the one before it, so history can be extended but not rewritten.</p>
+      <h2 id="proof">History you can check.</h2>
+      <p>A correction adds a new version. Each publication records the hash of the one before it, so a retained later manifest can reveal changes to earlier bytes.</p>
     </div>
-    <div class="chain" role="img" aria-label="Three manifests linked by hashes: 2025 version 1, 2026 version 1, and 2026 version 2, each recording the previous manifest's hash.">
-      <div class="sheet"><b>2025, v1</b><span class="k">ledger</span> #64 c41e…<br><span class="k">previous</span> none<br><span class="k">files</span> 14, signed</div>
-      <div class="sheet"><b>2026, v1</b><span class="k">ledger</span> #117 5ced…<br><span class="k">previous</span> <span class="link">sha256 9a07…</span><br><span class="k">files</span> 14, signed</div>
-      <div class="sheet"><b>2026, v2 (correction)</b><span class="k">ledger</span> #121 e18b…<br><span class="k">previous</span> <span class="link">sha256 3fd2…</span><br><span class="k">files</span> 14, signed</div>
-    </div>
+    <figure class="diagram">
+      <picture>
+        <source media="(max-width: 1024px) and (prefers-color-scheme: dark)" srcset="assets/illustrations/history-compact-dark.svg" width="384" height="904">
+        <source media="(max-width: 1024px)" srcset="assets/illustrations/history-compact-light.svg" width="384" height="904">
+        <source media="(prefers-color-scheme: dark)" srcset="assets/illustrations/history-dark.svg">
+        <img src="assets/illustrations/history-light.svg" width="1280" height="720" alt="Three publications link backward through previous-manifest hashes. A correction adds a new version; retaining trusted copies helps detect rewritten or replayed history." loading="lazy" decoding="async">
+      </picture>
+      <figcaption>Links preserve publication order. Retain trusted copies of manifests to help detect rollback. <a href="docs/verifying.html">What verification proves</a>.</figcaption>
+    </figure>
     <div class="proof-notes">
-      <p>Every file is listed in a manifest with its SHA-256 hash and signed with Ed25519. Change one byte and verification fails, naming the file.</p>
-      <p>Each manifest also commits to the head of your private ledger, so an auditor can prove which records a report was built from.</p>
+      <p><strong>Check the publication.</strong> The signed manifest lists file hashes. A signature authenticates those files; it does not prove that every event was recorded.</p>
+      <p><strong>Connect it to the ledger.</strong> Each manifest commits to a ledger head. An auditor with ledger access can check that commitment and review the underlying records.</p>
     </div>
   </section>
 
@@ -128,7 +166,7 @@
 
 <footer class="site-footer">
   <span>TransparencyKit is open source under the Apache-2.0 licence.</span>
-  <span><a href="docs/">Documentation</a> &nbsp; <a href="docs/SPEC.html">Specification</a> &nbsp; <a href="https://github.com/transparencykit/transparencykit">GitHub</a></span>
+  <span><a href="docs/">Documentation</a> &nbsp; <a href="docs/brand.html">Brand guidelines</a> &nbsp; <a href="https://github.com/transparencykit/transparencykit">GitHub</a></span>
 </footer>
 </body>
 </html>
